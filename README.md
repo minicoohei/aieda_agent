@@ -41,6 +41,58 @@ AI と協調しながら BigQuery / S3 / Google Sheets / DuckDB を横断し、m
 - gcloud CLI（`gcloud auth application-default login` 実行済み）
 - AWS CLI（`~/.aws` に default プロファイル）
 
+## Marimo ノートブック
+
+### BigQuery データセット俯瞰
+
+`notebooks/bigquery_overview.py` は、GCP プロジェクト内の全データセット・テーブル・スキーマを俯瞰するためのインタラクティブ UI を提供します。
+
+#### 使い方
+
+```bash
+# Application Default Credentials (ADC) でログイン（初回のみ）
+gcloud auth application-default login
+
+# ノートブックを起動（ポート 4173 を使用）
+uv run marimo run notebooks/bigquery_overview.py --port 4173
+```
+
+ブラウザで `http://localhost:4173` を開くと、以下の操作ができます：
+
+1. **プロジェクト ID 入力**（デフォルト: `yoake-dev-analysis`）
+2. **データセット一覧表示**
+3. **データセット選択**
+4. **テーブル一覧表示**（行数・サイズ含む）
+5. **テーブル選択**（`dev_yoake_posts` があればデフォルト選択）
+6. **スキーマ定義表示**（フィールド名、型、モード、説明）
+7. **行数グラフ表示**
+
+#### ポート管理（マルチエージェント運用）
+
+複数の Marimo ノートブックを同時に起動する場合は、**ポート番号を明示的に指定** してください：
+
+```bash
+# ノートブック 1: BigQuery 俯瞰
+uv run marimo run notebooks/bigquery_overview.py --port 4173
+
+# ノートブック 2: ポータル（別ターミナル）
+uv run marimo run notebooks/index.py --port 4174
+
+# ノートブック 3: 分析ノート（別ターミナル）
+uv run marimo run notebooks/analysis.py --port 4175
+```
+
+**推奨ポート割り当て：**
+
+| ノートブック | 用途 | ポート |
+| --- | --- | --- |
+| `bigquery_overview.py` | BigQuery 俯瞰 | 4173 |
+| `index.py` | ポータル | 4174 |
+| `analysis.py` | データ分析 | 4175 |
+| その他 | カスタム用途 | 4176～ |
+
+> マルチエージェント環境では、各エージェントが異なるポート番号を使用するように調整してください。
+
 ## セットアップ（ローカル実行）
 
 ```bash
@@ -86,6 +138,81 @@ uv run pytest                     # unitのみ
 RUN_EDA_TESTS=1 uv run pytest -m eda
 uv run pytest -m integration       # 外部接続テスト（要資格情報）
 ```
+
+## Serena MCP 連携
+
+Serena は LSP ベースのシンボリック操作ツールを提供する MCP サーバーで、Claude Code や Cursor などのクライアントにコード検索・編集の追加手段を与えられます[[1]](https://github.com/oraios/serena)。このリポジトリでも Serena を標準で使えるよう、以下の手順で初期設定を済ませてあります。
+
+### 1. Serena CLI の取得
+
+`uvx` で最新版を直接実行できます。常に最新版を使いたい場合はインストール不要です。
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena --help
+```
+
+### 2. プロジェクト初期化とインデックス
+
+ルート直下で以下を実行済みです。別の環境でも初期化したい場合は同じコマンドを再実行してください。
+
+```bash
+uvx --from git+https://github.com/oraios/serena \
+  serena project create \
+  --name "AI Data Lab" \
+  --language python \
+  --index
+```
+
+`.serena/project.yml` と LSP キャッシュが生成され、Serena からコード構造を即参照できます。
+
+### 3. ヘルスチェック
+
+言語サーバーや主要ツールの動作確認には
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena project health-check
+```
+
+を利用します。結果は `.serena/logs/health-checks/` に保存されるため、不具合時のログ参照も容易です。
+
+### 4. Cursor への登録
+
+Cursor（MCP 対応版）は `~/.cursor/mcp.json` で MCP サーバーを一元管理します。以下のエントリを追加すると、チャット側からいつでも Serena を呼び出せます（本リポジトリでは既に追加済みです）。
+
+```jsonc
+"serena": {
+  "command": "uvx",
+  "args": [
+    "--from", "git+https://github.com/oraios/serena",
+    "serena", "start-mcp-server",
+    "--context", "ide-assistant",
+    "--project", "/Users/kou1904/aieda_agent",
+    "--mode", "planning",
+    "--mode", "editing",
+    "--mode", "no-onboarding"
+  ]
+}
+```
+
+- `--context ide-assistant`: Cursor 側の組み込み操作と重複しない最小限のツールセット構成。
+- `--project /Users/kou1904/aieda_agent`: 対象ディレクトリを固定し、会話開始直後からツールが使えるようにする。
+- `--mode planning/editing/no-onboarding`: 設計→実装フローを強化しつつ、毎回のオンボーディングをスキップ。
+
+### 5. 単体起動（必要に応じて）
+
+Cursor 以外の MCP クライアントや検証用途で手動起動したい場合は次のコマンドを直接実行してください。
+
+```bash
+uvx --from git+https://github.com/oraios/serena \
+  serena start-mcp-server \
+  --context ide-assistant \
+  --project /Users/kou1904/aieda_agent \
+  --mode planning \
+  --mode editing \
+  --mode no-onboarding
+```
+
+起動時にブラウザで `http://localhost:24282/dashboard/` が開き、各ツール呼び出しや LSP の状態をリアルタイムで確認できます。
 
 ## コードスタイル / ルール
 
