@@ -89,8 +89,10 @@ def __(BigQueryConnector, DATASET_ID, PROJECT_ID, TABLE_ID, mo):
     # BigQueryコネクタ初期化
     try:
         connector = BigQueryConnector(project_id=PROJECT_ID)
-        
+
         # 全データ取得（展開形式・重複除去済み）
+        # ※ xPostUrl から X アカウントID（@ なしのハンドル）を抽出し、
+        #   特定アカウントを事前に除外する
         base_query = f"""
         WITH deduplicated AS (
           SELECT
@@ -99,6 +101,10 @@ def __(BigQueryConnector, DATASET_ID, PROJECT_ID, TABLE_ID, mo):
             post.xPostId as post_id,
             TIMESTAMP_SECONDS(post.xPostCreatedAt) as created_at,
             post.xPostUrl as post_url,
+            REGEXP_EXTRACT(
+              post.xPostUrl,
+              r'^https://x\\.com/([^/]+)/status'
+            ) as post_user_handle,
             post.xPostContent as content,
             post.xPostQuotedCount as quoted_count,
             post.xPostRepostedCount as repost_count,
@@ -119,6 +125,7 @@ def __(BigQueryConnector, DATASET_ID, PROJECT_ID, TABLE_ID, mo):
             post_id,
             created_at,
             post_url,
+            post_user_handle,
             content,
             quoted_count,
             repost_count,
@@ -130,7 +137,65 @@ def __(BigQueryConnector, DATASET_ID, PROJECT_ID, TABLE_ID, mo):
             user_badge,
             user_profile_image
         FROM deduplicated
-        WHERE row_num = 1
+        WHERE
+          row_num = 1
+          AND post_user_handle NOT IN (
+            'FRUITS_ZIPPER',
+            'amane_fz1026',
+            'suzuka_fz1124',
+            'yui_fz0221',
+            'luna_fz0703',
+            'manafy_fz0422',
+            'karen_fz0328',
+            'noel_fz1229',
+            'CUTIE_STREET_',
+            'aika_cs1126',
+            'risa_cs1108',
+            'ayano_cs0526',
+            'emiru_cs0422',
+            'kana_cs1111',
+            'haruka_cs0129',
+            'miyu_cs0913',
+            'nagisa_cs0628',
+            'candy_tune_',
+            'mizuki_ct0221',
+            'rino_ct1224',
+            'nachico_ct1001',
+            'natsu_ct0317',
+            'kotomi_ct0525',
+            'shizuka_ct0530',
+            'bibian_ct1203',
+            'SWEET_STEADY',
+            'rise_ss0731',
+            'ayu_ss0107',
+            'sakina_ss0229',
+            'nagisa_ss1029',
+            'natsuka_ss0719',
+            'mayumi_ss1227',
+            'yui_ss0109',
+            'nogizaka46',
+            'takanenofficial',
+            'nao_kizuki',
+            'hina_hinahata',
+            'Mikuru_hositani',
+            'erisahigasiyama',
+            'momonamatsumoto',
+            'MomokoHashimoto',
+            'su_suzumi_',
+            'himeri_momiyama',
+            'saara_hazuki',
+            'Equal_LOVE_12',
+            'otani_emiri',
+            'hana_oba',
+            'otoshima_risa',
+            'saitou_kiara',
+            'sasaki_maika',
+            'takamatsuhitomi',
+            'shoko_takiwaki',
+            'noguchi_iori',
+            'morohashi_sana',
+            'yamamoto_anna_'
+          )
         """
         
         df = connector.query(base_query)
