@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "${MARIMO_PORT:-2718}:2718"
+    volumes:
+      - ./:/app
+      - ${HOME}/.config/gcloud:/root/.config/gcloud:ro
+      - ${HOME}/.aws:/root/.aws:ro
+      - ./secrets:/secrets:ro
+      - ./data:/app/data
+      - ./reports:/app/reports
+    tty: true
+    stdin_open: true
+
