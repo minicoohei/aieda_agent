@@ -187,7 +187,12 @@ top_engagement = df.nlargest(10, 'total_engagement')[
 results['top_engagement_posts'] = top_engagement.to_dict('records')
 print("\n🏆 TOP 10 エンゲージメント投稿:")
 for i, row in top_engagement.iterrows():
-    content_preview = row['content'][:50] + '...' if len(row['content']) > 50 else row['content']
+    # content が None/NaN の場合にも安全にプレビュー生成
+    if pd.isna(row["content"]):
+        content = ""
+    else:
+        content = str(row["content"])
+    content_preview = content[:50] + "..." if len(content) > 50 else content
     print(f"  {i+1}. {row['user_name']}: {content_preview}")
     print(f"     いいね: {row['like_count']}, リポスト: {row['repost_count']}, 返信: {row['reply_count']}, 総計: {row['total_engagement']}")
 print()
@@ -208,14 +213,18 @@ media_comparison = df.groupby('has_media').agg({
     'total_engagement': 'mean'
 }).round(2)
 
+media_eng_with = df[df['has_media']]['total_engagement'].mean()
+media_eng_without = df[~df['has_media']]['total_engagement'].mean()
+media_ratio = media_eng_with / media_eng_without if media_eng_without != 0 else float('nan')
+
 results['media_stats'] = {
     'メディアあり投稿数': int(posts_with_media),
     'メディアあり割合_%': float(posts_with_media / len(df) * 100),
     'メディアなし投稿数': int(posts_without_media),
     'メディアなし割合_%': float(posts_without_media / len(df) * 100),
-    'メディアあり_平均エンゲージメント': float(df[df['has_media']]['total_engagement'].mean()),
-    'メディアなし_平均エンゲージメント': float(df[~df['has_media']]['total_engagement'].mean()),
-    'エンゲージメント倍率': float(df[df['has_media']]['total_engagement'].mean() / df[~df['has_media']]['total_engagement'].mean()),
+    'メディアあり_平均エンゲージメント': float(media_eng_with),
+    'メディアなし_平均エンゲージメント': float(media_eng_without),
+    'エンゲージメント倍率': float(media_ratio),
 }
 
 print("\n📊 メディア統計:")

@@ -246,7 +246,14 @@ def __(connector, mo, project_id, selected_dataset, table_selector):
 @app.cell
 def __(mo, selected_dataset, selected_table, table_info):
     """テーブル情報サマリーを表示"""
-    num_rows = table_info.get("num_rows", "N/A")
+    raw_num_rows = table_info.get("num_rows")
+    if isinstance(raw_num_rows, (int, float)):
+        num_rows = int(raw_num_rows)
+        num_rows_display = f"{num_rows:,}"
+    else:
+        num_rows = 0
+        num_rows_display = "N/A"
+    
     num_bytes = table_info.get("num_bytes", 0) or 0
     size_mb = round(num_bytes / 1024 / 1024, 2)
     table_type = table_info.get("table_type", "N/A")
@@ -257,7 +264,7 @@ def __(mo, selected_dataset, selected_table, table_info):
         ## 📊 テーブル詳細: `{selected_dataset}.{selected_table}`
 
         - **テーブル型**: {table_type}
-        - **行数**: {num_rows:,} 行
+        - **行数**: {num_rows_display} 行
         - **サイズ**: {size_mb} MB
         - **説明**: {description}
         """

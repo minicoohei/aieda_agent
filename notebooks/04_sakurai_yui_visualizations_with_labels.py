@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore')
 # 日本語フォント設定
 try:
     import japanize_matplotlib
-except:
+except ImportError:
     print("⚠️ japanize_matplotlib がインストールされていません")
 
 # 環境設定
@@ -128,7 +128,11 @@ print("=" * 80)
 
 # 曜日順に並べ替え
 weekday_order_jp = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日']
-weekday_counts = df['weekday_jp'].value_counts().reindex(weekday_order_jp)
+weekday_counts = (
+    df['weekday_jp']
+    .value_counts()
+    .reindex(weekday_order_jp, fill_value=0)
+)
 
 fig, ax = plt.subplots(figsize=(12, 6))
 bars = ax.bar(weekday_counts.index, weekday_counts.values, color='skyblue', edgecolor='navy', alpha=0.7)
@@ -257,7 +261,12 @@ print("📊 6. 曜日×時間帯ヒートマップ")
 print("=" * 80)
 
 heatmap_data = pd.crosstab(df['weekday_jp'], df['hour'])
-heatmap_data = heatmap_data.reindex(weekday_order_jp)
+heatmap_data = (
+    heatmap_data
+    .reindex(weekday_order_jp)
+    .fillna(0)
+    .astype(int)
+)
 
 fig, ax = plt.subplots(figsize=(16, 8))
 sns.heatmap(heatmap_data, annot=True, fmt='d', cmap='YlOrRd', cbar_kws={'label': '投稿数'},
@@ -275,8 +284,12 @@ print("\n" + "=" * 80)
 print("📊 7. エンゲージメント種別比較（積み上げ棒グラフ）")
 print("=" * 80)
 
-engagement_by_weekday = df.groupby('weekday_jp')[['like_count', 'repost_count', 'reply_count', 'quoted_count']].sum()
-engagement_by_weekday = engagement_by_weekday.reindex(weekday_order_jp)
+engagement_by_weekday = (
+    df.groupby('weekday_jp')[['like_count', 'repost_count', 'reply_count', 'quoted_count']]
+    .sum()
+    .reindex(weekday_order_jp)
+    .fillna(0)
+)
 
 fig, ax = plt.subplots(figsize=(12, 6))
 engagement_by_weekday.plot(kind='bar', stacked=True, ax=ax, 

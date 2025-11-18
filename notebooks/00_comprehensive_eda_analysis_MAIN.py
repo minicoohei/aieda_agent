@@ -238,12 +238,12 @@ try:
         'total_engagement': ['min', 'mean', 'max'],
         'has_media': 'mean',
         'content_length': 'mean',
-        'user_badge': lambda x: (x == True).sum()
+        'user_badge': lambda x: x.sum()
     }).round(2)
     quartile_analysis.columns = ['_'.join(col).strip() for col in quartile_analysis.columns.values]
     print(quartile_analysis)
     quartile_analysis.to_csv(reports_dir / "stats_engagement_quartiles.csv")
-    print(f"✅ 保存: stats_engagement_quartiles.csv")
+    print("✅ 保存: stats_engagement_quartiles.csv")
 except Exception as e:
     print(f"⚠️ 四分位数分析エラー: {e}")
     print("   多数のゼロ値のため、代替分析を実施...")
@@ -258,7 +258,7 @@ except Exception as e:
     alt_analysis.columns = ['_'.join(col).strip() for col in alt_analysis.columns.values]
     print(alt_analysis)
     alt_analysis.to_csv(reports_dir / "stats_engagement_categories.csv")
-    print(f"✅ 保存: stats_engagement_categories.csv")
+    print("✅ 保存: stats_engagement_categories.csv")
 
 # 3.8 メディア数別分析
 print("\n🎬 3.8 メディア数別分析")
@@ -393,6 +393,15 @@ print("=" * 80)
 print("📄 5. サマリーレポート生成中...")
 print("=" * 80)
 
+# ゼロ除算ガード付きでメディア倍率とバッジ影響力を計算
+media_with_eng = df[df['has_media']]['total_engagement'].mean()
+media_without_eng = df[~df['has_media']]['total_engagement'].mean()
+media_ratio = media_with_eng / media_without_eng if media_without_eng != 0 else float('nan')
+
+badge_with_eng = df[df['user_badge']]['total_engagement'].mean()
+badge_without_eng = df[~df['user_badge']]['total_engagement'].mean()
+badge_ratio = badge_with_eng / badge_without_eng if badge_without_eng != 0 else float('nan')
+
 summary_report = f"""
 # 櫻井優衣 包括的EDA分析サマリー
 
@@ -434,8 +443,8 @@ summary_report = f"""
 1. **総投稿数**: {len(df):,} 件（重複除去済み）
 2. **ユニークユーザー**: {df['user_id'].nunique():,} 人
 3. **平均エンゲージメント**: {df['total_engagement'].mean():.2f}
-4. **メディア倍率**: {df[df['has_media']]['total_engagement'].mean() / df[~df['has_media']]['total_engagement'].mean():.2f}x
-5. **バッジユーザー影響力**: {df[df['user_badge'] == True]['total_engagement'].mean() / df[df['user_badge'] != True]['total_engagement'].mean():.2f}x
+4. **メディア倍率**: {media_ratio:.2f}x
+5. **バッジユーザー影響力**: {badge_ratio:.2f}x
 
 ## 次のステップ
 

@@ -206,7 +206,7 @@ def __(df_clean, pd):
 
 
 @app.cell
-def __(df_clean):
+def __(df_clean, pd):
     # 曜日別投稿数
     weekday_posts = df_clean.groupby('weekday_name').size().reset_index(name='post_count')
     # 曜日順にソート
@@ -434,7 +434,7 @@ def __(df_clean, mo):
 
 
 @app.cell
-def __(Counter, df_clean, re):
+def __(Counter, df_clean, pd, re):
     # キーワード抽出（ハッシュタグ）
     all_content = ' '.join(df_clean['content'].fillna(''))
     
@@ -448,7 +448,7 @@ def __(Counter, df_clean, re):
 
 
 @app.cell
-def __(Counter, all_content, re):
+def __(Counter, all_content, pd, re):
     # メンション抽出
     mentions = re.findall(r'@\w+', all_content)
     mention_freq = Counter(mentions).most_common(30)
