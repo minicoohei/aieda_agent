@@ -1,3 +1,37 @@
+Metadata-Version: 2.4
+Name: ai-data-lab
+Version: 0.1.0
+Summary: AIと協調しながらBigQuery/S3/Google Sheets/DuckDBに接続できるmarimoベースのデータ分析環境。
+Author: kou1904
+License: MIT
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: marimo>=0.7.0
+Requires-Dist: duckdb>=1.1.2
+Requires-Dist: polars>=1.9.0
+Requires-Dist: pandas>=2.2.2
+Requires-Dist: pyarrow>=17.0.0
+Requires-Dist: google-cloud-bigquery>=3.25.0
+Requires-Dist: google-cloud-bigquery-storage>=2.26.0
+Requires-Dist: db-dtypes>=1.2.0
+Requires-Dist: boto3>=1.35.0
+Requires-Dist: s3fs>=2024.6.1
+Requires-Dist: gspread>=6.0.2
+Requires-Dist: pydantic-settings>=2.6.1
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: fsspec>=2024.6.1
+Requires-Dist: rich>=13.9.4
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.3; extra == "dev"
+Requires-Dist: pytest-dotenv>=0.5.2; extra == "dev"
+Requires-Dist: pytest-mock>=3.14.0; extra == "dev"
+Requires-Dist: pytest-cov>=6.0.0; extra == "dev"
+Provides-Extra: eda
+Requires-Dist: ydata-profiling>=4.8.3; extra == "eda"
+Requires-Dist: autoviz>=0.1.905; extra == "eda"
+Requires-Dist: bokeh>=3.6.0; extra == "eda"
+Requires-Dist: squarify>=0.4.3; extra == "eda"
+
 # AI Data Lab
 
 AI と協調しながら BigQuery / S3 / Google Sheets / DuckDB を横断し、marimo で再現性の高いデータ分析を行うための uv + Docker ベースのリポジトリです。EDA 自動化ツール（YData Profiling / AutoViz）や Squarify などの可視化ユーティリティも選択的に利用できます。
@@ -40,58 +74,6 @@ AI と協調しながら BigQuery / S3 / Google Sheets / DuckDB を横断し、m
 - Docker / Docker Compose
 - gcloud CLI（`gcloud auth application-default login` 実行済み）
 - AWS CLI（`~/.aws` に default プロファイル）
-
-## Marimo ノートブック
-
-### BigQuery データセット俯瞰
-
-`notebooks/bigquery_overview.py` は、GCP プロジェクト内の全データセット・テーブル・スキーマを俯瞰するためのインタラクティブ UI を提供します。
-
-#### 使い方
-
-```bash
-# Application Default Credentials (ADC) でログイン（初回のみ）
-gcloud auth application-default login
-
-# ノートブックを起動（ポート 4173 を使用）
-uv run marimo run notebooks/bigquery_overview.py --port 4173
-```
-
-ブラウザで `http://localhost:4173` を開くと、以下の操作ができます：
-
-1. **プロジェクト ID 入力**（デフォルト: `yoake-dev-analysis`）
-2. **データセット一覧表示**
-3. **データセット選択**
-4. **テーブル一覧表示**（行数・サイズ含む）
-5. **テーブル選択**（`dev_yoake_posts` があればデフォルト選択）
-6. **スキーマ定義表示**（フィールド名、型、モード、説明）
-7. **行数グラフ表示**
-
-#### ポート管理（マルチエージェント運用）
-
-複数の Marimo ノートブックを同時に起動する場合は、**ポート番号を明示的に指定** してください：
-
-```bash
-# ノートブック 1: BigQuery 俯瞰
-uv run marimo run notebooks/bigquery_overview.py --port 4173
-
-# ノートブック 2: ポータル（別ターミナル）
-uv run marimo run notebooks/index.py --port 4174
-
-# ノートブック 3: 分析ノート（別ターミナル）
-uv run marimo run notebooks/analysis.py --port 4175
-```
-
-**推奨ポート割り当て：**
-
-| ノートブック | 用途 | ポート |
-| --- | --- | --- |
-| `bigquery_overview.py` | BigQuery 俯瞰 | 4173 |
-| `index.py` | ポータル | 4174 |
-| `analysis.py` | データ分析 | 4175 |
-| その他 | カスタム用途 | 4176～ |
-
-> マルチエージェント環境では、各エージェントが異なるポート番号を使用するように調整してください。
 
 ## セットアップ（ローカル実行）
 
