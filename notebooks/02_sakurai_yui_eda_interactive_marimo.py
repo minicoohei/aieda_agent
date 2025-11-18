@@ -181,6 +181,9 @@ def __(df, pd):
     # コンテンツ長
     df_clean['content_length'] = df_clean['content'].fillna('').str.len()
     
+    # URL含有フラグ（後続セル・サマリーで共通利用）
+    df_clean['has_url'] = df_clean['content'].fillna('').str.contains('http')
+    
     return (df_clean,)
 
 
@@ -331,18 +334,27 @@ def __(df_clean):
 
 @app.cell
 def __(df_clean, mo):
-    posts_with_media = df_clean['has_media'].sum()
-    posts_without_media = (~df_clean['has_media']).sum()
+    posts_with_media = int(df_clean['has_media'].sum())
+    posts_without_media = int((~df_clean['has_media']).sum())
+    total_posts = len(df_clean)
+    
+    media_eng_with = df_clean[df_clean['has_media']]['total_engagement'].mean()
+    media_eng_without = df_clean[~df_clean['has_media']]['total_engagement'].mean()
+    media_ratio = media_eng_with / media_eng_without if media_eng_without not in (0, 0.0) else float('nan')
+    
+    share_with = posts_with_media / total_posts * 100 if total_posts else float('nan')
+    share_without = posts_without_media / total_posts * 100 if total_posts else float('nan')
     
     mo.md(f"""
     ### 📊 メディア統計
     
-    - **メディアあり**: {posts_with_media:,} 件 ({posts_with_media/len(df_clean)*100:.1f}%)
-    - **メディアなし**: {posts_without_media:,} 件 ({posts_without_media/len(df_clean)*100:.1f}%)
+    - **メディアあり**: {posts_with_media:,} 件 ({share_with:.1f}%)
+    - **メディアなし**: {posts_without_media:,} 件 ({share_without:.1f}%)
     
-    メディアありの投稿は平均的に **{df_clean[df_clean['has_media']]['total_engagement'].mean() / df_clean[~df_clean['has_media']]['total_engagement'].mean():.2f}倍** のエンゲージメントを獲得
+    メディアありの投稿は平均的に **{media_ratio:.2f}倍** のエンゲージメントを獲得
     """)
-    return posts_with_media, posts_without_media
+    # サマリー用に media_ratio も返しておく
+    return media_ratio, posts_with_media, posts_without_media
 
 
 @app.cell
@@ -382,20 +394,31 @@ def __(df_clean):
 @app.cell
 def __(df_clean, mo, user_stats):
     badge_users = user_stats[user_stats['user_badge'] == True]
+    non_badge_users = user_stats[user_stats['user_badge'] != True]
+    total_users = len(user_stats)
+    
+    badge_posts = badge_users['post_count'].sum()
+    non_badge_posts = non_badge_users['post_count'].sum()
+    badge_avg_eng = (
+        badge_users['total_engagement'].sum() / badge_posts if badge_posts else float('nan')
+    )
+    non_badge_avg_eng = (
+        non_badge_users['total_engagement'].sum() / non_badge_posts if non_badge_posts else float('nan')
+    )
     
     mo.md(f"""
     ### 👥 ユーザー統計
     
     - **総ユーザー数**: {len(user_stats):,} 人
-    - **バッジ付きユーザー数**: {len(badge_users):,} 人 ({len(badge_users)/len(user_stats)*100:.1f}%)
+    - **バッジ付きユーザー数**: {len(badge_users):,} 人 ({(len(badge_users)/total_users*100 if total_users else float('nan')):.1f}%)
     - **平均投稿数/ユーザー**: {user_stats['post_count'].mean():.1f} 件
     - **中央値投稿数**: {user_stats['post_count'].median():.0f} 件
     - **最大投稿数**: {user_stats['post_count'].max()} 件（ユーザー: {user_stats.iloc[0]['user_name']}）
     
     ---
     
-    - **バッジ付きユーザーの平均エンゲージメント**: {badge_users['total_engagement'].sum() / badge_users['post_count'].sum():.1f}
-    - **バッジなしユーザーの平均エンゲージメント**: {user_stats[user_stats['user_badge'] != True]['total_engagement'].sum() / user_stats[user_stats['user_badge'] != True]['post_count'].sum():.1f}
+    - **バッジ付きユーザーの平均エンゲージメント**: {badge_avg_eng:.1f}
+    - **バッジなしユーザーの平均エンゲージメント**: {non_badge_avg_eng:.1f}
     """)
     return (badge_users,)
 
@@ -460,8 +483,7 @@ def __(Counter, all_content, pd, re):
 
 @app.cell
 def __(df_clean):
-    # URL含有率
-    df_clean['has_url'] = df_clean['content'].fillna('').str.contains('http')
+    # URL含有率（has_url は前処理セルで付与済み）
     url_stats = df_clean['has_url'].value_counts()
     
     url_stats
@@ -480,12 +502,13 @@ def __(mo):
 
 
 @app.cell
-def __(badge_users, daily_posts, df_clean, hashtag_df, mo, posts_with_media, user_stats):
+def __(badge_users, daily_posts, df_clean, hashtag_df, media_ratio, mo, posts_with_media, user_stats):
+    total_clean = len(df_clean)
     mo.md(f"""
     # 🎯 櫻井優衣 投稿データ分析結果サマリー
     
     ## 📈 投稿パターン
-    - **総投稿数**: {len(df_clean):,} 件
+    - **総投稿数**: {total_clean:,} 件
     - **期間**: {df_clean['created_at'].min():%Y-%m-%d} 〜 {df_clean['created_at'].max():%Y-%m-%d} ({(df_clean['created_at'].max() - df_clean['created_at'].min()).days} 日間)
     - **1日平均投稿数**: {daily_posts['post_count'].mean():.1f} 件
     - **最も投稿が多い曜日**: （データから算出）
@@ -499,13 +522,13 @@ def __(badge_users, daily_posts, df_clean, hashtag_df, mo, posts_with_media, use
     - **総エンゲージメント最大**: {df_clean['total_engagement'].max()} 件
     
     ## 🎬 メディア効果
-    - **メディアあり投稿**: {posts_with_media:,} 件 ({posts_with_media/len(df_clean)*100:.1f}%)
-    - **メディアなし投稿**: {len(df_clean)-posts_with_media:,} 件 ({(len(df_clean)-posts_with_media)/len(df_clean)*100:.1f}%)
-    - **メディアありのエンゲージメント倍率**: {df_clean[df_clean['has_media']]['total_engagement'].mean() / df_clean[~df_clean['has_media']]['total_engagement'].mean():.2f}倍
+    - **メディアあり投稿**: {posts_with_media:,} 件 ({(posts_with_media/total_clean*100 if total_clean else float('nan')):.1f}%)
+    - **メディアなし投稿**: {total_clean-posts_with_media:,} 件 ({((total_clean-posts_with_media)/total_clean*100 if total_clean else float('nan')):.1f}%)
+    - **メディアありのエンゲージメント倍率**: {media_ratio:.2f}倍
     
     ## 👥 ユーザー特性
     - **総ユーザー数**: {len(user_stats):,} 人
-    - **バッジ付きユーザー**: {len(badge_users):,} 人 ({len(badge_users)/len(user_stats)*100:.1f}%)
+    - **バッジ付きユーザー**: {len(badge_users):,} 人 ({(len(badge_users)/len(user_stats)*100 if len(user_stats) else float('nan')):.1f}%)
     - **1ユーザー平均投稿数**: {user_stats['post_count'].mean():.1f} 件
     - **最多投稿ユーザー**: {user_stats.iloc[0]['user_name']} ({user_stats.iloc[0]['post_count']} 件)
     
