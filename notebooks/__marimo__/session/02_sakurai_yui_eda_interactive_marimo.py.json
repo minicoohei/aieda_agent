@@ -1,0 +1,411 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.8"
+  },
+  "cells": [
+    {
+      "id": "MJUe",
+      "code_hash": "a7cad103d80249881f60e415fff34dce",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"eda\">\ud83c\udf80 \u6afb\u4e95\u512a\u8863 \u6295\u7a3f\u30c7\u30fc\u30bf EDA</h1>\n<span class=\"paragraph\"><strong>FRUITS ZIPPER</strong> \u6afb\u4e95\u512a\u8863\u306b\u95a2\u3059\u308b X\uff08Twitter\uff09\u6295\u7a3f\u30c7\u30fc\u30bf\u306e\u63a2\u7d22\u7684\u30c7\u30fc\u30bf\u5206\u6790</span>\n<span class=\"paragraph\">\ud83d\udcca \u30c7\u30fc\u30bf\u671f\u9593: 2025-10-13 \u301c 2025-11-17\uff08\u7d041\u30f6\u6708\uff09\n\ud83d\udcc8 \u7dcf\u6295\u7a3f\u6570: 106,057\u4ef6</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "57c3ca86680dbb5a492c62597fd01502",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"_1\">\ud83d\udd0c \u30c7\u30fc\u30bf\u8aad\u307f\u8fbc\u307f</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "f9ac76d4d392de730b4025a5487acaba",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83d\udcc5 \u6295\u7a3f\u30d1\u30bf\u30fc\u30f3\u5206\u6790</h2>\n<span class=\"paragraph\">\u6642\u7cfb\u5217\u3067\u306e\u6295\u7a3f\u30dc\u30ea\u30e5\u30fc\u30e0\u3001\u66dc\u65e5\u30fb\u6642\u9593\u5e2f\u5225\u306e\u50be\u5411\u3092\u78ba\u8a8d</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "9425dadc7f180f1a1bd7c0bcb0adf8f8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83d\udcac \u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u5206\u6790</h2>\n<span class=\"paragraph\">\u3044\u3044\u306d\u3001\u30ea\u30dd\u30b9\u30c8\u3001\u8fd4\u4fe1\u3001\u5f15\u7528\u306e\u5206\u5e03\u3068\u76f8\u95a2\u3092\u78ba\u8a8d</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "326c81b8d16a54498964b7b287972a0e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83c\udfac \u30e1\u30c7\u30a3\u30a2\u5206\u6790</h2>\n<span class=\"paragraph\">\u30e1\u30c7\u30a3\u30a2\u6709\u7121\u5225\u306e\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u3068\u6295\u7a3f\u5206\u5e03</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "1f1922de2743051ccd53351d231afccc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83d\udc65 \u30e6\u30fc\u30b6\u30fc\u5206\u6790</h2>\n<span class=\"paragraph\">\u6295\u7a3f\u8005\uff08\u30e6\u30fc\u30b6\u30fc\uff09\u5358\u4f4d\u3067\u306e\u96c6\u8a08\u3068\u5206\u5e03</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "93d02204861765a9e6853eddf46241ab",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83d\udcdd \u30b3\u30f3\u30c6\u30f3\u30c4\u5206\u6790</h2>\n<span class=\"paragraph\">\u6295\u7a3f\u5185\u5bb9\u306e\u9577\u3055\u3001\u30ad\u30fc\u30ef\u30fc\u30c9\u983b\u5ea6</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "a77902dc93cac04ad2ee16baddbbfd45",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83d\udcca \u7dcf\u5408\u30b5\u30de\u30ea\u30fc</h2>\n<span class=\"paragraph\">\u5206\u6790\u7d50\u679c\u306e\u8981\u70b9</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "c0c993835c17ae6567b736dd9f4b66bf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "0cc00e2f9f73acab13f3fa1c8200aabd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "53160ff1615c4b057016237c089a0c66",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "e8fd47facbcf8a5dbc1e7b420fa124a7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"_1\">\ud83d\udcca \u57fa\u672c\u7d71\u8a08</h2>\n<ul>\n<li><strong>\u7dcf\u6295\u7a3f\u6570</strong>: 12,744 \u4ef6</li>\n<li><strong>\u30e6\u30cb\u30fc\u30af\u30e6\u30fc\u30b6\u30fc\u6570</strong>: 5,332 \u4eba</li>\n<li><strong>\u30e6\u30cb\u30fc\u30af\u6295\u7a3fID\u6570</strong>: 12,744 \u4ef6</li>\n<li><strong>\u671f\u9593</strong>: 2025-10-13 \u301c 2025-11-17</li>\n<li><strong>\u65e5\u6570</strong>: 34 \u65e5</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "4fd87b52d13e746e6a65d8774815aeda",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "019e6c14a106f80cdcd8f9cf638ea391",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='BYtC-0' random-id='2df558a9-c045-2f59-dad6-d95bb4474df7'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-13T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:2},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-15T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:2},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-16T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-17T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-18T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:3},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-19T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-20T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:14},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-21T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:3},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-22T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:79},{&#92;&quot;date&#92;&quot;:&#92;&quot;2025-10-23T00:00:00.000&#92;&quot;,&#92;&quot;post_count&#92;&quot;:177}]&quot;' data-total-rows='35' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;date&quot;,[&quot;datetime&quot;,&quot;datetime64[ns]&quot;]],[&quot;post_count&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "abceedebadf281618cca143610a42c61",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='RGSE-0' random-id='3ec259fd-5880-eeb7-767b-e51c42f9a13b'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;&#92;&quot;:1,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Monday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1779},{&#92;&quot;&#92;&quot;:5,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Tuesday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1121},{&#92;&quot;&#92;&quot;:6,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Wednesday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:614},{&#92;&quot;&#92;&quot;:4,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Thursday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:4500},{&#92;&quot;&#92;&quot;:0,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Friday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1395},{&#92;&quot;&#92;&quot;:2,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Saturday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1637},{&#92;&quot;&#92;&quot;:3,&#92;&quot;weekday_name&#92;&quot;:&#92;&quot;Sunday&#92;&quot;,&#92;&quot;post_count&#92;&quot;:1698}]&quot;' data-total-rows='7' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;weekday_name&quot;,[&quot;string&quot;,&quot;category&quot;]],[&quot;post_count&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "36615a9880868364151299bdc1d80f3b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Kclp-0' random-id='1a48bd20-6191-62e8-fd83-59682ff77f6d'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;hour&#92;&quot;:0,&#92;&quot;post_count&#92;&quot;:270},{&#92;&quot;hour&#92;&quot;:1,&#92;&quot;post_count&#92;&quot;:289},{&#92;&quot;hour&#92;&quot;:2,&#92;&quot;post_count&#92;&quot;:277},{&#92;&quot;hour&#92;&quot;:3,&#92;&quot;post_count&#92;&quot;:399},{&#92;&quot;hour&#92;&quot;:4,&#92;&quot;post_count&#92;&quot;:276},{&#92;&quot;hour&#92;&quot;:5,&#92;&quot;post_count&#92;&quot;:231},{&#92;&quot;hour&#92;&quot;:6,&#92;&quot;post_count&#92;&quot;:359},{&#92;&quot;hour&#92;&quot;:7,&#92;&quot;post_count&#92;&quot;:383},{&#92;&quot;hour&#92;&quot;:8,&#92;&quot;post_count&#92;&quot;:324},{&#92;&quot;hour&#92;&quot;:9,&#92;&quot;post_count&#92;&quot;:449}]&quot;' data-total-rows='24' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;hour&quot;,[&quot;integer&quot;,&quot;int32&quot;]],[&quot;post_count&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "cbf0185d95139696fc90ff1b2b38a453",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"_1\">\ud83d\udcc8 \u65e5\u5225\u6295\u7a3f\u6570\u30b5\u30de\u30ea\u30fc</h3>\n<ul>\n<li><strong>\u5e73\u5747</strong>: 364.1 \u4ef6/\u65e5</li>\n<li><strong>\u4e2d\u592e\u5024</strong>: 253 \u4ef6/\u65e5</li>\n<li><strong>\u6700\u5927</strong>: 3846 \u4ef6/\u65e5</li>\n<li><strong>\u6700\u5c0f</strong>: 1 \u4ef6/\u65e5</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "86be63ca065c009e21b30547714b7eda",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='nWHF-0' random-id='a1b37df2-66ff-dd44-19dc-9f65dea99086'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;&#92;&quot;:&#92;&quot;count&#92;&quot;,&#92;&quot;like_count&#92;&quot;:12744.0,&#92;&quot;repost_count&#92;&quot;:12744.0,&#92;&quot;reply_count&#92;&quot;:12744.0,&#92;&quot;quoted_count&#92;&quot;:12744.0,&#92;&quot;total_engagement&#92;&quot;:12744.0},{&#92;&quot;&#92;&quot;:&#92;&quot;mean&#92;&quot;,&#92;&quot;like_count&#92;&quot;:46.8534212178,&#92;&quot;repost_count&#92;&quot;:2.6586629002,&#92;&quot;reply_count&#92;&quot;:0.2301475204,&#92;&quot;quoted_count&#92;&quot;:1.4683772756,&#92;&quot;total_engagement&#92;&quot;:51.210608914},{&#92;&quot;&#92;&quot;:&#92;&quot;std&#92;&quot;,&#92;&quot;like_count&#92;&quot;:979.3156468515,&#92;&quot;repost_count&#92;&quot;:106.9134833053,&#92;&quot;reply_count&#92;&quot;:5.4451527294,&#92;&quot;quoted_count&#92;&quot;:106.6160345914,&#92;&quot;total_engagement&#92;&quot;:1148.7713036206},{&#92;&quot;&#92;&quot;:&#92;&quot;min&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.0,&#92;&quot;repost_count&#92;&quot;:0.0,&#92;&quot;reply_count&#92;&quot;:0.0,&#92;&quot;quoted_count&#92;&quot;:0.0,&#92;&quot;total_engagement&#92;&quot;:0.0},{&#92;&quot;&#92;&quot;:&#92;&quot;25%&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.0,&#92;&quot;repost_count&#92;&quot;:0.0,&#92;&quot;reply_count&#92;&quot;:0.0,&#92;&quot;quoted_count&#92;&quot;:0.0,&#92;&quot;total_engagement&#92;&quot;:0.0},{&#92;&quot;&#92;&quot;:&#92;&quot;50%&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.0,&#92;&quot;repost_count&#92;&quot;:0.0,&#92;&quot;reply_count&#92;&quot;:0.0,&#92;&quot;quoted_count&#92;&quot;:0.0,&#92;&quot;total_engagement&#92;&quot;:0.0},{&#92;&quot;&#92;&quot;:&#92;&quot;75%&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.0,&#92;&quot;repost_count&#92;&quot;:0.0,&#92;&quot;reply_count&#92;&quot;:0.0,&#92;&quot;quoted_count&#92;&quot;:0.0,&#92;&quot;total_engagement&#92;&quot;:0.0},{&#92;&quot;&#92;&quot;:&#92;&quot;max&#92;&quot;,&#92;&quot;like_count&#92;&quot;:67777.0,&#92;&quot;repost_count&#92;&quot;:11479.0,&#92;&quot;reply_count&#92;&quot;:445.0,&#92;&quot;quoted_count&#92;&quot;:11925.0,&#92;&quot;total_engagement&#92;&quot;:91626.0}]&quot;' data-total-rows='8' data-total-columns='5' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;like_count&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;repost_count&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;reply_count&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;quoted_count&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;total_engagement&quot;,[&quot;number&quot;,&quot;Float64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;&quot;,[&quot;string&quot;,&quot;object&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "ba00a381c9a672f9619730f4eb312289",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"_1\">\ud83d\udcca \u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u7d71\u8a08\u30b5\u30de\u30ea\u30fc</h3>\n<ul>\n<li><strong>\u5e73\u5747\u3044\u3044\u306d\u6570</strong>: 46.9</li>\n<li><strong>\u5e73\u5747\u30ea\u30dd\u30b9\u30c8\u6570</strong>: 2.7</li>\n<li><strong>\u5e73\u5747\u8fd4\u4fe1\u6570</strong>: 0.2</li>\n<li><strong>\u5e73\u5747\u5f15\u7528\u6570</strong>: 1.5</li>\n<li><strong>\u5e73\u5747\u7dcf\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8</strong>: 51.2</li>\n</ul>\n<hr />\n<ul>\n<li><strong>\u4e2d\u592e\u5024\u3044\u3044\u306d\u6570</strong>: 0</li>\n<li><strong>\u4e2d\u592e\u5024\u7dcf\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8</strong>: 0</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "c0bf6d32f0c3ede2f083bb8e4ce45566",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ZHCJ-0' random-id='04272855-8636-f043-7853-bbd531b872e5'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;&#92;&quot;:&#92;&quot;like_count&#92;&quot;,&#92;&quot;like_count&#92;&quot;:1.0,&#92;&quot;repost_count&#92;&quot;:0.7879231401,&#92;&quot;reply_count&#92;&quot;:0.8035823888,&#92;&quot;quoted_count&#92;&quot;:0.6714489455},{&#92;&quot;&#92;&quot;:&#92;&quot;repost_count&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.7879231401,&#92;&quot;repost_count&#92;&quot;:1.0,&#92;&quot;reply_count&#92;&quot;:0.7902172168,&#92;&quot;quoted_count&#92;&quot;:0.9736374109},{&#92;&quot;&#92;&quot;:&#92;&quot;reply_count&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.8035823888,&#92;&quot;repost_count&#92;&quot;:0.7902172168,&#92;&quot;reply_count&#92;&quot;:1.0,&#92;&quot;quoted_count&#92;&quot;:0.7710459966},{&#92;&quot;&#92;&quot;:&#92;&quot;quoted_count&#92;&quot;,&#92;&quot;like_count&#92;&quot;:0.6714489455,&#92;&quot;repost_count&#92;&quot;:0.9736374109,&#92;&quot;reply_count&#92;&quot;:0.7710459966,&#92;&quot;quoted_count&#92;&quot;:1.0}]&quot;' data-total-rows='4' data-total-columns='4' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;like_count&quot;,[&quot;number&quot;,&quot;float64&quot;]],[&quot;repost_count&quot;,[&quot;number&quot;,&quot;float64&quot;]],[&quot;reply_count&quot;,[&quot;number&quot;,&quot;float64&quot;]],[&quot;quoted_count&quot;,[&quot;number&quot;,&quot;float64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;&quot;,[&quot;string&quot;,&quot;object&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "b0c07397dce90a31550c8b8cf1b89079",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ROlb-0' random-id='04d6ae89-7141-524e-2beb-43b3a0ffb4d4'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;&#92;&quot;:10701,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-08T06:05:04.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d2025&#92;&#92;u3010&#92;&#92;u516c&#92;&#92;u5f0f&#92;&#92;u3011&#92;&#92;uff5c11&#92;&#92;u670813&#92;&#92;u65e5(&#92;&#92;u6728)&#92;&#92;u3088&#92;&#92;u308b7&#92;&#92;u6642&#92;&#92;u304b&#92;&#92;u3089&#92;&#92;u751f&#92;&#92;u653e&#92;&#92;u9001&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;ud83d&#92;&#92;udc9c&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83e&#92;&#92;udd91&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8SP&#92;&#92;u30e6&#92;&#92;u30cb&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83e&#92;&#92;udd90  &#92;&#92;u4e95&#92;&#92;u4e0a&#92;&#92;u548c(&#92;&#92;u4e43&#92;&#92;u6728&#92;&#92;u574246) &#92;&#92;u00d7 &#92;&#92;u5409&#92;&#92;u5ddd&#92;&#92;u3072&#92;&#92;u3088&#92;&#92;u308a(&#92;&#92;u8d85&#92;&#92;u3068&#92;&#92;u304d&#92;&#92;u3081&#92;&#92;u304d&#92;&#92;u2661&#92;&#92;u5ba3&#92;&#92;u4f1d&#92;&#92;u90e8)&#92;&#92;u00d7  &#92;&#92;u4f50&#92;&#92;u3005&#92;&#92;u6728&#92;&#92;u821e&#92;&#92;u9999(&#92;&#92;uff1dLOVE) &#92;&#92;u00d7&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863(FRUITS ZIPPER) &#92;&#92;u00d7 TSUZUMI(ME:I)   &#92;&#92;u3000&#92;&#92;u300e&#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc&#92;&#92;uff0fBuono!&#92;&#92;u300f  &#92;&#92;u5e73&#92;&#92;u6210&#92;&#92;u306e&#92;&#92;u4f1d&#92;&#92;u8aac&#92;&#92;u7684&#92;&#92;u30a2&#92;&#92;u30a4&#92;&#92;u30c9&#92;&#92;u30eb&#92;&#92;u30fbBuono!&#92;&#92;u306e &#92;&#92;u4ee3&#92;&#92;u8868&#92;&#92;u66f2&#92;&#92;u3067&#92;&#92;u3042&#92;&#92;u308a&#92;&#92;u30a2&#92;&#92;u30a4&#92;&#92;u30c9&#92;&#92;u30eb&#92;&#92;u754c&#92;&#92;u306e&#92;&#92;u795e&#92;&#92;u66f2&#92;&#92;u3092&#92;&#92;u62ab&#92;&#92;u9732&#92;&#92;ud83c&#92;&#92;udf51  #&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d #&#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc https://t.co/4mkMwzjgOL&#92;&quot;,&#92;&quot;like_count&#92;&quot;:67777,&#92;&quot;repost_count&#92;&quot;:11479,&#92;&quot;reply_count&#92;&quot;:445,&#92;&quot;quoted_count&#92;&quot;:11925,&#92;&quot;total_engagement&#92;&quot;:91626,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:7868,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T12:13:04.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u30dd&#92;&#92;u30e0&#92;&#92;u30dd&#92;&#92;u30e0&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u3048&#92;&#92;uff1f&#92;&#92;u3061&#92;&#92;u3087&#92;&#92;u3063&#92;&#92;u3068&#92;&#92;u5f85&#92;&#92;u3063&#92;&#92;u3066... FRUITSZIPPER&#92;&#92;u306e&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3061&#92;&#92;u3083&#92;&#92;u3093&#92;&#92;u3082&#92;&#92;u3082&#92;&#92;u3061&#92;&#92;u306e&#92;&#92;u30d1&#92;&#92;u30fc&#92;&#92;u30c8&#92;&#92;u3067&#92;&#92;u308f&#92;&#92;u3056&#92;&#92;u308f&#92;&#92;u3056&#92;&#92;u5c0f&#92;&#92;u6307&#92;&#92;u7acb&#92;&#92;u3066&#92;&#92;u3066&#92;&#92;u6b4c&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u308b&#92;&#92;u3058&#92;&#92;u3083&#92;&#92;u3093&#92;&#92;uff08&#92;&#92;u6ce3 &#92;&#92;u672c&#92;&#92;u5f53&#92;&#92;u306b&#92;&#92;u30cf&#92;&#92;u30ed&#92;&#92;u30d7&#92;&#92;u30ed&#92;&#92;u5927&#92;&#92;u597d&#92;&#92;u304d&#92;&#92;u306a&#92;&#92;u3093&#92;&#92;u3060&#92;&#92;u306d&#92;&#92;uff01&#92;&#92;u3042&#92;&#92;u308a&#92;&#92;u304c&#92;&#92;u3068&#92;&#92;u3046 https://t.co/BxFWnNxISo&#92;&quot;,&#92;&quot;like_count&#92;&quot;:58636,&#92;&quot;repost_count&#92;&quot;:1675,&#92;&quot;reply_count&#92;&quot;:224,&#92;&quot;quoted_count&#92;&quot;:377,&#92;&quot;total_engagement&#92;&quot;:60912,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:3551,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T11:36:54.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u4e09&#92;&#92;u5ea6&#92;&#92;u5bdd&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3055&#92;&#92;u3093&#92;&#92;u3001&#92;&#92;u3082&#92;&#92;u3082&#92;&#92;u3061&#92;&#92;u306e&#92;&#92;u5c0f&#92;&#92;u6307&#92;&#92;u3092&#92;&#92;u3001&#92;&#92;u3042&#92;&#92;u308a&#92;&#92;u304c&#92;&#92;u3068&#92;&#92;u3046&#92;&#92;uff08&#92;&#92;u6ce3&#92;&#92;uff09&#92;&#92;uff08&#92;&#92;u6ce3&#92;&#92;uff09&#92;&#92;uff08&#92;&#92;u6ce3&#92;&#92;uff09  #&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d https://t.co/dxF3aB4FKr&#92;&quot;,&#92;&quot;like_count&#92;&quot;:34344,&#92;&quot;repost_count&#92;&quot;:1748,&#92;&quot;reply_count&#92;&quot;:2,&#92;&quot;quoted_count&#92;&quot;:560,&#92;&quot;total_engagement&#92;&quot;:36654,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:5729,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T13:31:34.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u308c&#92;&#92;u3044&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83e&#92;&#92;ude77&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u3053&#92;&#92;u308c&#92;&#92;u304c&#92;&#92;u30ac&#92;&#92;u30c1&#92;&#92;u30aa&#92;&#92;u30bf&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3067&#92;&#92;u3059&#92;&#92;u3002&#92;&#92;u5b8c&#92;&#92;u74a7&#92;&#92;u3002  #&#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc #&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863 #Buono #&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d https://t.co/u74W8131Si&#92;&quot;,&#92;&quot;like_count&#92;&quot;:25860,&#92;&quot;repost_count&#92;&quot;:851,&#92;&quot;reply_count&#92;&quot;:55,&#92;&quot;quoted_count&#92;&quot;:191,&#92;&quot;total_engagement&#92;&quot;:26957,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:8496,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T11:38:12.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u3084&#92;&#92;u307e&#92;&#92;u304a&#92;&#92;u304f&#92;&#92;u3093&#92;&#92;u3002&#92;&#92;uff08&#92;&#92;u4f1a&#92;&#92;u9577&#92;&#92;uff09&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3061&#92;&#92;u3083&#92;&#92;u3093 &#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc&#92;&#92;u3067&#92;&#92;u5c0f&#92;&#92;u6307&#92;&#92;u7acb&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u308b&#92;&#92;u306e&#92;&#92;u30ea&#92;&#92;u30b9&#92;&#92;u30da&#92;&#92;u30af&#92;&#92;u30c8&#92;&#92;u611f&#92;&#92;u3058&#92;&#92;u308bwww  &#92;&#92;u30aa&#92;&#92;u30bf&#92;&#92;u30af&#92;&#92;u4ee5&#92;&#92;u5916&#92;&#92;u5206&#92;&#92;u304b&#92;&#92;u3089&#92;&#92;u3093&#92;&#92;u3060&#92;&#92;u308d&#92;&#92;u3053&#92;&#92;u3093&#92;&#92;u306a&#92;&#92;u306e   #&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863 https://t.co/zaAWJqAR7B&#92;&quot;,&#92;&quot;like_count&#92;&quot;:20545,&#92;&quot;repost_count&#92;&quot;:475,&#92;&quot;reply_count&#92;&quot;:46,&#92;&quot;quoted_count&#92;&quot;:91,&#92;&quot;total_engagement&#92;&quot;:21157,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:7203,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T11:36:09.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u3072&#92;&#92;u2b50&#92;&#92;ufe0f&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u307f&#92;&#92;u3093&#92;&#92;u306a&#92;&#92;u304a&#92;&#92;u75b2&#92;&#92;u308c&#92;&#92;u69d8&#92;&#92;u30fc&#92;&#92;ud83d&#92;&#92;ude2d&#92;&#92;ud83d&#92;&#92;ude2d&#92;&#92;ud83d&#92;&#92;ude2d&#92;&#92;ud83d&#92;&#92;udc96&#92;&#92;ud83d&#92;&#92;udc96&#92;&#92;ud83d&#92;&#92;udc96  &#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc / Buono&#92;&#92;uff01 #&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d #ME_I #&#92;&#92;u6d77&#92;&#92;u8001&#92;&#92;u539f&#92;&#92;u9f13 #TSUZUMI #&#92;&#92;u30a4&#92;&#92;u30b3&#92;&#92;u30e9&#92;&#92;u30d6 #&#92;&#92;u4f50&#92;&#92;u3005&#92;&#92;u6728&#92;&#92;u821e&#92;&#92;u9999 #&#92;&#92;u3068&#92;&#92;u304d&#92;&#92;u5ba3 #&#92;&#92;u5409&#92;&#92;u5ddd&#92;&#92;u3072&#92;&#92;u3088&#92;&#92;u308a #FRUITSZIPPER #&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863 #&#92;&#92;u4e43&#92;&#92;u6728&#92;&#92;u574246 #&#92;&#92;u4e95&#92;&#92;u4e0a&#92;&#92;u548c    https://t.co/hGMbGHCXNZ&#92;&quot;,&#92;&quot;like_count&#92;&quot;:15852,&#92;&quot;repost_count&#92;&quot;:1481,&#92;&quot;reply_count&#92;&quot;:4,&#92;&quot;quoted_count&#92;&quot;:1023,&#92;&quot;total_engagement&#92;&quot;:18360,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:1192,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T12:57:36.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u30de&#92;&#92;u30b9&#92;&#92;u30af&#92;&#92;u3082&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u304f&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u30c4&#92;&#92;u30a4&#92;&#92;u30f3&#92;&#92;u30c6&#92;&#92;u30fc&#92;&#92;u30eb&#92;&#92;u306e&#92;&#92;u30a4&#92;&#92;u30e1&#92;&#92;u30fc&#92;&#92;u30b8&#92;&#92;u304c&#92;&#92;u3042&#92;&#92;u308b&#92;&#92;u55e3&#92;&#92;u6c38&#92;&#92;u6843&#92;&#92;u5b50&#92;&#92;u3055&#92;&#92;u3093&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u3001&#92;&#92;u5b9f&#92;&#92;u306fBuono!&#92;&#92;u306e&#92;&#92;u6642&#92;&#92;u306f&#92;&#92;u57fa&#92;&#92;u672c&#92;&#92;u30dd&#92;&#92;u30cb&#92;&#92;u30fc&#92;&#92;u30c6&#92;&#92;u30fc&#92;&#92;u30eb&#92;&#92;u306a&#92;&#92;u3093&#92;&#92;u3067&#92;&#92;u3059&#92;&#92;u3002&#92;&#92;u305d&#92;&#92;u3057&#92;&#92;u3066&#92;&#92;u3001&#92;&#92;u30de&#92;&#92;u30a4&#92;&#92;u30af&#92;&#92;u3092&#92;&#92;u3082&#92;&#92;u3064&#92;&#92;u6642&#92;&#92;u306b&#92;&#92;u5c0f&#92;&#92;u6307&#92;&#92;u3092&#92;&#92;u7acb&#92;&#92;u3066&#92;&#92;u308b&#92;&#92;u304f&#92;&#92;u305b&#92;&#92;u304c&#92;&#92;u3042&#92;&#92;u308b&#92;&#92;u3093&#92;&#92;u3067&#92;&#92;u3059&#92;&#92;u3002&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3061&#92;&#92;u3083&#92;&#92;u3093&#92;&#92;u306b&#92;&#92;u6700&#92;&#92;u5927&#92;&#92;u9650&#92;&#92;u306e&#92;&#92;u656c&#92;&#92;u610f&#92;&#92;u3092&#92;&#92;uff01&#92;&#92;u3042&#92;&#92;u308a&#92;&#92;u304c&#92;&#92;u3068&#92;&#92;u3046&#92;&#92;ud83d&#92;&#92;udc96 https://t.co/5pdnzNqmDc&#92;&quot;,&#92;&quot;like_count&#92;&quot;:17168,&#92;&quot;repost_count&#92;&quot;:636,&#92;&quot;reply_count&#92;&quot;:14,&#92;&quot;quoted_count&#92;&quot;:70,&#92;&quot;total_engagement&#92;&quot;:17888,&#92;&quot;has_media&#92;&quot;:true},{&#92;&quot;&#92;&quot;:10880,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T16:43:57.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;S&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u6240&#92;&#92;u611f &#92;&#92;u6d77&#92;&#92;u8001&#92;&#92;u539f&#92;&#92;u9f13&#92;&#92;u2192&#92;&#92;u6b4c&#92;&#92;u3046&#92;&#92;u3081&#92;&#92;u3047&#92;&#92;u3001&#92;&#92;u4eca&#92;&#92;u56de&#92;&#92;u306f&#92;&#92;u5272&#92;&#92;u3068&#92;&#92;u30a2&#92;&#92;u30fc&#92;&#92;u30c6&#92;&#92;u30a3&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u5bc4&#92;&#92;u308a&#92;&#92;u306e&#92;&#92;u6b4c&#92;&#92;u3044&#92;&#92;u65b9&#92;&#92;u3060&#92;&#92;u3063&#92;&#92;u305f&#92;&#92;u304b&#92;&#92;u306a&#92;&#92;uff1f &#92;&#92;u4f50&#92;&#92;u3005&#92;&#92;u6728&#92;&#92;u821e&#92;&#92;u9999&#92;&#92;u2192&#92;&#92;u795e&#92;&#92;u3002&#92;&#92;u3042&#92;&#92;u3093&#92;&#92;u305f&#92;&#92;u304c&#92;&#92;u30a2&#92;&#92;u30a4&#92;&#92;u30c9&#92;&#92;u30eb&#92;&#92;u3092&#92;&#92;u4f53&#92;&#92;u73fe&#92;&#92;u3059&#92;&#92;u308b&#92;&#92;u3082&#92;&#92;u306e&#92;&#92;u3060 &#92;&#92;u4e95&#92;&#92;u4e0a&#92;&#92;u548c&#92;&#92;u2192&#92;&#92;u304b&#92;&#92;u308f&#92;&#92;u3044&#92;&#92;u3044&#92;&#92;u3001&#92;&#92;u898b&#92;&#92;u305f&#92;&#92;u76ee&#92;&#92;u3082&#92;&#92;u76f8&#92;&#92;u307e&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u6b4c&#92;&#92;u3044&#92;&#92;u65b9&#92;&#92;u304c&#92;&#92;u5de5&#92;&#92;u85e4&#92;&#92;u9759&#92;&#92;u9999&#92;&#92;u611f&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u2192&#92;&#92;u305a&#92;&#92;u3063&#92;&#92;u3068&#92;&#92;u30ea&#92;&#92;u30b9&#92;&#92;u30da&#92;&#92;u30af&#92;&#92;u30c8&#92;&#92;u3092&#92;&#92;u6301&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u3001&#92;&#92;u3068&#92;&#92;u767a&#92;&#92;u8a00&#92;&#92;u3057&#92;&#92;u3066&#92;&#92;u305f&#92;&#92;u3060&#92;&#92;u3051&#92;&#92;u30ea&#92;&#92;u30b9&#92;&#92;u30da&#92;&#92;u30af&#92;&#92;u30c8&#92;&#92;u304c&#92;&#92;u611f&#92;&#92;u3058&#92;&#92;u3089&#92;&#92;u308c&#92;&#92;u3066&#92;&#92;u3088&#92;&#92;u304b&#92;&#92;u3063&#92;&#92;u305f&#92;&#92;u3002 &#92;&#92;u2193 https://t.co/Fwok3dW1JF&#92;&quot;,&#92;&quot;like_count&#92;&quot;:16431,&#92;&quot;repost_count&#92;&quot;:171,&#92;&quot;reply_count&#92;&quot;:244,&#92;&quot;quoted_count&#92;&quot;:296,&#92;&quot;total_engagement&#92;&quot;:17142,&#92;&quot;has_media&#92;&quot;:false},{&#92;&quot;&#92;&quot;:3961,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T15:36:27.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u660e&#92;&#92;u65e5&#92;&#92;u306e&#92;&#92;u30d1&#92;&#92;u30f3&#92;&#92;u30c0&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u53e9&#92;&#92;u304b&#92;&#92;u308c&#92;&#92;u308b&#92;&#92;u304b&#92;&#92;u3089TikTok&#92;&#92;u3082&#92;&#92;u9589&#92;&#92;u9396&#92;&#92;u3057&#92;&#92;u3066&#92;&#92;u308b&#92;&#92;u3093&#92;&#92;u3058&#92;&#92;u3083&#92;&#92;u306a&#92;&#92;u304b&#92;&#92;u3063&#92;&#92;u305f&#92;&#92;u3063&#92;&#92;u3051&#92;&#92;uff1f &#92;&#92;u3044&#92;&#92;u307e&#92;&#92;u306e&#92;&#92;u82b8&#92;&#92;u80fd&#92;&#92;u4eba&#92;&#92;u3063&#92;&#92;u3066&#92;&#92;u771f&#92;&#92;u3063&#92;&#92;u5148&#92;&#92;u306b&#92;&#92;u53e9&#92;&#92;u304b&#92;&#92;u308c&#92;&#92;u308b&#92;&#92;u304c&#92;&#92;u6d6e&#92;&#92;u304b&#92;&#92;u3076&#92;&#92;u307b&#92;&#92;u3069&#92;&#92;u306b&#92;&#92;u3053&#92;&#92;u3046&#92;&#92;u3044&#92;&#92;u3046&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30ec&#92;&#92;u30b9&#92;&#92;u62b1&#92;&#92;u3048&#92;&#92;u3066&#92;&#92;u751f&#92;&#92;u304d&#92;&#92;u3066&#92;&#92;u308b&#92;&#92;u3093&#92;&#92;u3060&#92;&#92;u306d&#92;&#92;u3002&#92;&#92;u30d1&#92;&#92;u30cb&#92;&#92;u30c3&#92;&#92;u30af&#92;&#92;u969c&#92;&#92;u5bb3&#92;&#92;u306e&#92;&#92;u524d&#92;&#92;u5146&#92;&#92;uff1f &#92;&#92;u3061&#92;&#92;u306a&#92;&#92;u307f&#92;&#92;u306b&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u304c&#92;&#92;u771f&#92;&#92;u3063&#92;&#92;u5f53&#92;&#92;u306b&#92;&#92;uff08&#92;&#92;u672c&#92;&#92;u4eba&#92;&#92;u306e&#92;&#92;u8a00&#92;&#92;u52d5&#92;&#92;u3084&#92;&#92;u4e0d&#92;&#92;u7965&#92;&#92;u4e8b&#92;&#92;u3067&#92;&#92;uff09&#92;&#92;u708e&#92;&#92;u4e0a&#92;&#92;u3057&#92;&#92;u3066&#92;&#92;u308b&#92;&#92;u6240&#92;&#92;u898b&#92;&#92;u305f&#92;&#92;u4e8b&#92;&#92;u306a&#92;&#92;u3044&#92;&#92;u3093&#92;&#92;u3060&#92;&#92;u3051&#92;&#92;u3069&#92;&#92;u3001&#92;&#92;u306a&#92;&#92;u3093&#92;&#92;u3067&#92;&#92;u3053&#92;&#92;u3093&#92;&#92;u306a&#92;&#92;u5acc&#92;&#92;u308f&#92;&#92;u308c&#92;&#92;u3066&#92;&#92;u3093&#92;&#92;u306e&#92;&#92;uff1f https://t.co/3fopnMXxf4&#92;&quot;,&#92;&quot;like_count&#92;&quot;:16008,&#92;&quot;repost_count&#92;&quot;:190,&#92;&quot;reply_count&#92;&quot;:83,&#92;&quot;quoted_count&#92;&quot;:146,&#92;&quot;total_engagement&#92;&quot;:16427,&#92;&quot;has_media&#92;&quot;:false},{&#92;&quot;&#92;&quot;:2781,&#92;&quot;created_at&#92;&quot;:&#92;&quot;2025-11-13T11:22:23.000Z&#92;&quot;,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d2025&#92;&#92;u3010&#92;&#92;u516c&#92;&#92;u5f0f&#92;&#92;u3011&#92;&#92;uff5c11&#92;&#92;u670813&#92;&#92;u65e5(&#92;&#92;u6728)&#92;&#92;u3088&#92;&#92;u308b7&#92;&#92;u6642&#92;&#92;u304b&#92;&#92;u3089&#92;&#92;u751f&#92;&#92;u653e&#92;&#92;u9001&#92;&quot;,&#92;&quot;content&#92;&quot;:&#92;&quot;&#92;&#92;uff0f &#92;&#92;u3000&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d2025&#92;&#92;u653e&#92;&#92;u9001&#92;&#92;u4e2d&#92;&#92;ud83d&#92;&#92;udcfa &#92;&#92;u3000&#92;&#92;u3053&#92;&#92;u306e&#92;&#92;u3042&#92;&#92;u3068 &#92;&#92;u3000&#92;&#92;ud83d&#92;&#92;udc9c&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83e&#92;&#92;udd91&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8SP&#92;&#92;u30e6&#92;&#92;u30cb&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83e&#92;&#92;udd90 &#92;&#92;uff3c  &#92;&#92;u4e95&#92;&#92;u4e0a&#92;&#92;u548c(&#92;&#92;u4e43&#92;&#92;u6728&#92;&#92;u574246) &#92;&#92;u00d7 &#92;&#92;u5409&#92;&#92;u5ddd&#92;&#92;u3072&#92;&#92;u3088&#92;&#92;u308a(&#92;&#92;u8d85&#92;&#92;u3068&#92;&#92;u304d&#92;&#92;u3081&#92;&#92;u304d&#92;&#92;u2661&#92;&#92;u5ba3&#92;&#92;u4f1d&#92;&#92;u90e8)&#92;&#92;u00d7  &#92;&#92;u4f50&#92;&#92;u3005&#92;&#92;u6728&#92;&#92;u821e&#92;&#92;u9999(&#92;&#92;uff1dLOVE) &#92;&#92;u00d7&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863(FRUITS ZIPPER) &#92;&#92;u00d7 TSUZUMI(ME:I)  &#92;&#92;ud83c&#92;&#92;udfa4&#92;&#92;u300e&#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc&#92;&#92;uff0fBuono!&#92;&#92;u300f&#92;&#92;ud83c&#92;&#92;udfa4  &#92;&#92;u611f&#92;&#92;u60f3&#92;&#92;u306f #&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d &#92;&#92;u3067&#92;&#92;ud83d&#92;&#92;udcac https://t.co/In1f6hY5GR&#92;&quot;,&#92;&quot;like_count&#92;&quot;:9061,&#92;&quot;repost_count&#92;&quot;:1484,&#92;&quot;reply_count&#92;&quot;:102,&#92;&quot;quoted_count&#92;&quot;:487,&#92;&quot;total_engagement&#92;&quot;:11134,&#92;&quot;has_media&#92;&quot;:true}]&quot;' data-total-rows='20' data-total-columns='9' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;created_at&quot;,[&quot;datetime&quot;,&quot;datetime64[us, UTC]&quot;]],[&quot;user_name&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;content&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;like_count&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;repost_count&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;reply_count&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;quoted_count&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;total_engagement&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;has_media&quot;,[&quot;unknown&quot;,&quot;boolean&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "68e16288160b60973127dae9f493d2d6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='TqIu-0' random-id='d809a743-bf66-e31e-b23e-47da8ae24551'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;has_media&#92;&quot;:false,&#92;&quot;post_id_count&#92;&quot;:8002,&#92;&quot;like_count_mean&#92;&quot;:13.92,&#92;&quot;like_count_median&#92;&quot;:0.0,&#92;&quot;repost_count_mean&#92;&quot;:0.39,&#92;&quot;repost_count_median&#92;&quot;:0.0,&#92;&quot;reply_count_mean&#92;&quot;:0.1,&#92;&quot;reply_count_median&#92;&quot;:0.0,&#92;&quot;quoted_count_mean&#92;&quot;:0.25,&#92;&quot;quoted_count_median&#92;&quot;:0.0,&#92;&quot;total_engagement_mean&#92;&quot;:14.67,&#92;&quot;total_engagement_median&#92;&quot;:0.0},{&#92;&quot;has_media&#92;&quot;:true,&#92;&quot;post_id_count&#92;&quot;:4742,&#92;&quot;like_count_mean&#92;&quot;:102.42,&#92;&quot;like_count_median&#92;&quot;:0.0,&#92;&quot;repost_count_mean&#92;&quot;:6.48,&#92;&quot;repost_count_median&#92;&quot;:0.0,&#92;&quot;reply_count_mean&#92;&quot;:0.44,&#92;&quot;reply_count_median&#92;&quot;:0.0,&#92;&quot;quoted_count_mean&#92;&quot;:3.52,&#92;&quot;quoted_count_median&#92;&quot;:0.0,&#92;&quot;total_engagement_mean&#92;&quot;:112.87,&#92;&quot;total_engagement_median&#92;&quot;:0.0}]&quot;' data-total-rows='2' data-total-columns='12' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;has_media&quot;,[&quot;unknown&quot;,&quot;boolean&quot;]],[&quot;post_id_count&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;like_count_mean&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;like_count_median&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;repost_count_mean&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;repost_count_median&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;reply_count_mean&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;reply_count_median&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;quoted_count_mean&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;quoted_count_median&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;total_engagement_mean&quot;,[&quot;number&quot;,&quot;Float64&quot;]],[&quot;total_engagement_median&quot;,[&quot;number&quot;,&quot;Float64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "6a71b8859331c3062c728e9925bd51ea",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"_1\">\ud83d\udcca \u30e1\u30c7\u30a3\u30a2\u7d71\u8a08</h3>\n<ul>\n<li><strong>\u30e1\u30c7\u30a3\u30a2\u3042\u308a</strong>: 4,742 \u4ef6 (37.2%)</li>\n<li><strong>\u30e1\u30c7\u30a3\u30a2\u306a\u3057</strong>: 8,002 \u4ef6 (62.8%)</li>\n</ul>\n<span class=\"paragraph\">\u30e1\u30c7\u30a3\u30a2\u3042\u308a\u306e\u6295\u7a3f\u306f\u5e73\u5747\u7684\u306b <strong>7.69\u500d</strong> \u306e\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u3092\u7372\u5f97</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "b28e8eac4275a134eb515fe6d03e2046",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ulZA-0' random-id='3a9667a7-1f80-a10a-3340-94c4d4c6f3d3'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;&#92;&quot;:994,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;887453073613873152&#92;&quot;},&#92;&quot;post_count&#92;&quot;:125,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u304f&#92;&#92;u308d&#92;&#92;u3042&#92;&#92;u3081&#92;&#92;uff81&#92;&#92;uff6c&#92;&#92;uff9d&#92;&#92;ud83c&#92;&#92;udf6d&#92;&#92;ud83d&#92;&#92;udda4&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:true,&#92;&quot;total_likes&#92;&quot;:32,&#92;&quot;total_reposts&#92;&quot;:3,&#92;&quot;total_replies&#92;&quot;:2,&#92;&quot;total_quotes&#92;&quot;:1,&#92;&quot;total_engagement&#92;&quot;:38},{&#92;&quot;&#92;&quot;:1654,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1305112460827922434&#92;&quot;},&#92;&quot;post_count&#92;&quot;:114,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u307f&#92;&#92;u3084&#92;&#92;u3046&#92;&#92;u30fc&#92;&#92;u263a&#92;&#92;ufe0f&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83c&#92;&#92;udff9&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:422,&#92;&quot;total_reposts&#92;&quot;:12,&#92;&quot;total_replies&#92;&quot;:1,&#92;&quot;total_quotes&#92;&quot;:2,&#92;&quot;total_engagement&#92;&quot;:437},{&#92;&quot;&#92;&quot;:2094,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1486866047563042816&#92;&quot;},&#92;&quot;post_count&#92;&quot;:108,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u3044&#92;&#92;u304a&#92;&#92;u30dd&#92;&#92;u30c6&#92;&#92;u263a&#92;&#92;ufe0f&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83c&#92;&#92;udff9&#92;&#92;u0359&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:2180,&#92;&quot;total_reposts&#92;&quot;:97,&#92;&quot;total_replies&#92;&quot;:6,&#92;&quot;total_quotes&#92;&quot;:7,&#92;&quot;total_engagement&#92;&quot;:2290},{&#92;&quot;&#92;&quot;:810,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;761490807358566401&#92;&quot;},&#92;&quot;post_count&#92;&quot;:101,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u30bb&#92;&#92;u30a4&#92;&#92;u30b8&#92;&#92;u30e6&#92;&#92;u30a4&#92;&#92;u30ca&#92;&#92;u30f3&#92;&#92;u30c9&#92;&#92;ud83e&#92;&#92;ude9e&#92;&#92;ud83d&#92;&#92;ude37&#92;&#92;ud83c&#92;&#92;udfc3&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83d&#92;&#92;udc9b&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:true,&#92;&quot;total_likes&#92;&quot;:1674,&#92;&quot;total_reposts&#92;&quot;:70,&#92;&quot;total_replies&#92;&quot;:11,&#92;&quot;total_quotes&#92;&quot;:6,&#92;&quot;total_engagement&#92;&quot;:1761},{&#92;&quot;&#92;&quot;:3601,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1827705699503308800&#92;&quot;},&#92;&quot;post_count&#92;&quot;:90,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u3054&#92;&#92;u3081&#92;&#92;u3093&#92;&#92;u306a&#92;&#92;u3055&#92;&#92;u3044&#92;&#92;u3055&#92;&#92;u3044&#92;&#92;ud83d&#92;&#92;ude4f&#92;&#92;ud83d&#92;&#92;udc9a&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:4,&#92;&quot;total_reposts&#92;&quot;:2,&#92;&quot;total_replies&#92;&quot;:0,&#92;&quot;total_quotes&#92;&quot;:0,&#92;&quot;total_engagement&#92;&quot;:6},{&#92;&quot;&#92;&quot;:4387,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1913943814609506304&#92;&quot;},&#92;&quot;post_count&#92;&quot;:85,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u307f&#92;&#92;u3046&#92;&#92;u263a&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83c&#92;&#92;udff9&#92;&#92;u4e00&#92;&#92;u751f&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u63a8&#92;&#92;u3057(&#92;&#92;u512a&#92;&#92;u8863&#92;&#92;u3061&#92;&#92;u3083&#92;&#92;u3093&#92;&#92;u3068&#92;&#92;u4e0d&#92;&#92;u4ef2&#92;&#92;u306a&#92;&#92;u3046)&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:true,&#92;&quot;total_likes&#92;&quot;:3862,&#92;&quot;total_reposts&#92;&quot;:93,&#92;&quot;total_replies&#92;&quot;:35,&#92;&quot;total_quotes&#92;&quot;:56,&#92;&quot;total_engagement&#92;&quot;:4046},{&#92;&quot;&#92;&quot;:3857,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1859548560079093761&#92;&quot;},&#92;&quot;post_count&#92;&quot;:84,&#92;&quot;user_name&#92;&quot;:&#92;&quot;yuu&#92;&#92;u263a&#92;&#92;ufe0f&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83c&#92;&#92;udff9&#92;&#92;ud83e&#92;&#92;ude75&#92;&#92;ud83e&#92;&#92;udde1&#92;&#92;ud83e&#92;&#92;ude77&#92;&#92;ud83d&#92;&#92;udc9c&#92;&#92;ud83d&#92;&#92;udc9b&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;u2764&#92;&#92;ufe0f&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:6,&#92;&quot;total_reposts&#92;&quot;:2,&#92;&quot;total_replies&#92;&quot;:0,&#92;&quot;total_quotes&#92;&quot;:1,&#92;&quot;total_engagement&#92;&quot;:9},{&#92;&quot;&#92;&quot;:1361,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1161887999333818368&#92;&quot;},&#92;&quot;post_count&#92;&quot;:77,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u304b&#92;&#92;u305a&#92;&#92;u3077&#92;&#92;u308c&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:1,&#92;&quot;total_reposts&#92;&quot;:1,&#92;&quot;total_replies&#92;&quot;:0,&#92;&quot;total_quotes&#92;&quot;:0,&#92;&quot;total_engagement&#92;&quot;:2},{&#92;&quot;&#92;&quot;:3413,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1800187425282801664&#92;&quot;},&#92;&quot;post_count&#92;&quot;:73,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u3061&#92;&#92;u306a&#92;&#92;u305f&#92;&#92;u3093&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:1,&#92;&quot;total_reposts&#92;&quot;:1,&#92;&quot;total_replies&#92;&quot;:0,&#92;&quot;total_quotes&#92;&quot;:0,&#92;&quot;total_engagement&#92;&quot;:2},{&#92;&quot;&#92;&quot;:1963,&#92;&quot;user_id&#92;&quot;:{&#92;&quot;&#36;bigint&#92;&quot;:&#92;&quot;1443624246094139393&#92;&quot;},&#92;&quot;post_count&#92;&quot;:69,&#92;&quot;user_name&#92;&quot;:&#92;&quot;&#92;&#92;u306f&#92;&#92;u3061&#92;&#92;u307f&#92;&#92;u3064&#92;&#92;u263a&#92;&#92;ufe0f&#92;&#92;ud83d&#92;&#92;udc9a&#92;&#92;ud83c&#92;&#92;udff9&#92;&quot;,&#92;&quot;user_badge&#92;&quot;:false,&#92;&quot;total_likes&#92;&quot;:384,&#92;&quot;total_reposts&#92;&quot;:9,&#92;&quot;total_replies&#92;&quot;:0,&#92;&quot;total_quotes&#92;&quot;:0,&#92;&quot;total_engagement&#92;&quot;:393}]&quot;' data-total-rows='50' data-total-columns='9' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;user_id&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;post_count&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;user_name&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;user_badge&quot;,[&quot;unknown&quot;,&quot;boolean&quot;]],[&quot;total_likes&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;total_reposts&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;total_replies&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;total_quotes&quot;,[&quot;integer&quot;,&quot;Int64&quot;]],[&quot;total_engagement&quot;,[&quot;integer&quot;,&quot;Int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "ebe95da9deb04d76561709e737e71c85",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"_1\">\ud83d\udc65 \u30e6\u30fc\u30b6\u30fc\u7d71\u8a08</h3>\n<ul>\n<li><strong>\u7dcf\u30e6\u30fc\u30b6\u30fc\u6570</strong>: 5,332 \u4eba</li>\n<li><strong>\u30d0\u30c3\u30b8\u4ed8\u304d\u30e6\u30fc\u30b6\u30fc\u6570</strong>: 302 \u4eba (5.7%)</li>\n<li><strong>\u5e73\u5747\u6295\u7a3f\u6570/\u30e6\u30fc\u30b6\u30fc</strong>: 2.4 \u4ef6</li>\n<li><strong>\u4e2d\u592e\u5024\u6295\u7a3f\u6570</strong>: 1 \u4ef6</li>\n<li><strong>\u6700\u5927\u6295\u7a3f\u6570</strong>: 125 \u4ef6\uff08\u30e6\u30fc\u30b6\u30fc: \u304f\u308d\u3042\u3081\uff81\uff6c\uff9d\ud83c\udf6d\ud83d\udda4\uff09</li>\n</ul>\n<hr />\n<ul>\n<li><strong>\u30d0\u30c3\u30b8\u4ed8\u304d\u30e6\u30fc\u30b6\u30fc\u306e\u5e73\u5747\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8</strong>: 151.9</li>\n<li><strong>\u30d0\u30c3\u30b8\u306a\u3057\u30e6\u30fc\u30b6\u30fc\u306e\u5e73\u5747\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8</strong>: 40.1</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "51327fb87b2ac486542f5a3557ae1ac6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ZBYS-0' random-id='be4d81f6-4b9a-dcc6-a665-1ba2ab157e31'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;&#92;&quot;:&#92;&quot;count&#92;&quot;,&#92;&quot;content_length&#92;&quot;:12744.0},{&#92;&quot;&#92;&quot;:&#92;&quot;mean&#92;&quot;,&#92;&quot;content_length&#92;&quot;:82.9865034526},{&#92;&quot;&#92;&quot;:&#92;&quot;std&#92;&quot;,&#92;&quot;content_length&#92;&quot;:44.7989953743},{&#92;&quot;&#92;&quot;:&#92;&quot;min&#92;&quot;,&#92;&quot;content_length&#92;&quot;:5.0},{&#92;&quot;&#92;&quot;:&#92;&quot;25%&#92;&quot;,&#92;&quot;content_length&#92;&quot;:49.0},{&#92;&quot;&#92;&quot;:&#92;&quot;50%&#92;&quot;,&#92;&quot;content_length&#92;&quot;:72.0},{&#92;&quot;&#92;&quot;:&#92;&quot;75%&#92;&quot;,&#92;&quot;content_length&#92;&quot;:112.0},{&#92;&quot;&#92;&quot;:&#92;&quot;max&#92;&quot;,&#92;&quot;content_length&#92;&quot;:252.0}]&quot;' data-total-rows='8' data-total-columns='1' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;content_length&quot;,[&quot;number&quot;,&quot;float64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;&quot;,[&quot;string&quot;,&quot;object&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "d21eb766adaa523b6e65940d694353fa",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"_1\">\ud83d\udccf \u30b3\u30f3\u30c6\u30f3\u30c4\u9577\u7d71\u8a08</h3>\n<ul>\n<li><strong>\u5e73\u5747\u6587\u5b57\u6570</strong>: 83.0 \u6587\u5b57</li>\n<li><strong>\u4e2d\u592e\u5024\u6587\u5b57\u6570</strong>: 72 \u6587\u5b57</li>\n<li><strong>\u6700\u5927\u6587\u5b57\u6570</strong>: 252 \u6587\u5b57</li>\n<li><strong>\u6700\u5c0f\u6587\u5b57\u6570</strong>: 5 \u6587\u5b57</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "406f5d540a37f7537e24e3f93303a2f9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='nHfw-0' random-id='9ce75779-06b8-d7ac-f9ce-514b6beda8cf'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u6afb&#92;&#92;u4e95&#92;&#92;u512a&#92;&#92;u8863&#92;&quot;,&#92;&quot;count&#92;&quot;:7764},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#FRUITSZIPPER&#92;&quot;,&#92;&quot;count&#92;&quot;:1715},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u30d9&#92;&#92;u30b9&#92;&#92;u30c8&#92;&#92;u30d2&#92;&#92;u30c3&#92;&#92;u30c8&#92;&#92;u6b4c&#92;&#92;u8b21&#92;&#92;u796d&#92;&quot;,&#92;&quot;count&#92;&quot;:1424},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u6708&#92;&#92;u8db3&#92;&#92;u5929&#92;&#92;u97f3&#92;&quot;,&#92;&quot;count&#92;&quot;:1001},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u3075&#92;&#92;u308b&#92;&#92;u3063&#92;&#92;u3071&#92;&#92;u30fc&#92;&quot;,&#92;&quot;count&#92;&quot;:782},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u3075&#92;&#92;u308b&#92;&#92;u3063&#92;&#92;u3071&#92;&#92;u30fcANNX&#92;&quot;,&#92;&quot;count&#92;&quot;:637},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u4ef2&#92;&#92;u5ddd&#92;&#92;u7460&#92;&#92;u590f&#92;&quot;,&#92;&quot;count&#92;&quot;:542},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u93ae&#92;&#92;u897f&#92;&#92;u5bff&#92;&#92;u3005&#92;&#92;u6b4c&#92;&quot;,&#92;&quot;count&#92;&quot;:540},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u771f&#92;&#92;u4e2d&#92;&#92;u307e&#92;&#92;u306a&#92;&quot;,&#92;&quot;count&#92;&quot;:454},{&#92;&quot;hashtag&#92;&quot;:&#92;&quot;#&#92;&#92;u521d&#92;&#92;u604b&#92;&#92;u30b5&#92;&#92;u30a4&#92;&#92;u30c0&#92;&#92;u30fc&#92;&quot;,&#92;&quot;count&#92;&quot;:448}]&quot;' data-total-rows='30' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;hashtag&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;count&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "0453c695f9611ade1b3e158fa124cdf5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='xXTn-0' random-id='0d4b1977-80d8-b9cd-539c-f95e23b71bc0'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;mention&#92;&quot;:&#92;&quot;@yui_fz0221&#92;&quot;,&#92;&quot;count&#92;&quot;:373},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@YouTube&#92;&#92;u3088&#92;&#92;u308a&#92;&quot;,&#92;&quot;count&#92;&quot;:67},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@FRUITS_ZIPPER&#92;&quot;,&#92;&quot;count&#92;&quot;:62},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@mlhatqNFA707&#92;&quot;,&#92;&quot;count&#92;&quot;:21},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@amane_fz1026&#92;&quot;,&#92;&quot;count&#92;&quot;:21},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@suzuka_fz1124&#92;&quot;,&#92;&quot;count&#92;&quot;:20},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@besthitskayosai&#92;&quot;,&#92;&quot;count&#92;&quot;:19},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@karen_fz0328&#92;&quot;,&#92;&quot;count&#92;&quot;:19},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@sakuraiyuistaff&#92;&quot;,&#92;&quot;count&#92;&quot;:19},{&#92;&quot;mention&#92;&quot;:&#92;&quot;@luna_fz0703&#92;&quot;,&#92;&quot;count&#92;&quot;:18}]&quot;' data-total-rows='30' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;mention&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;count&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "248c7b1ae28a1f921d847880aff82567",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='AjVT-0' random-id='462dfd92-5b60-4d66-5467-95104579855a'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;has_url&#92;&quot;:true,&#92;&quot;count&#92;&quot;:6516},{&#92;&quot;has_url&#92;&quot;:false,&#92;&quot;count&#92;&quot;:6228}]&quot;' data-total-rows='2' data-total-columns='1' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;count&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[[&quot;has_url&quot;,[&quot;boolean&quot;,&quot;bool&quot;]]]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "258a0017b05074ab950099c6b49da50f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"_1\">\ud83c\udfaf \u6afb\u4e95\u512a\u8863 \u6295\u7a3f\u30c7\u30fc\u30bf\u5206\u6790\u7d50\u679c\u30b5\u30de\u30ea\u30fc</h1>\n<h2 id=\"_2\">\ud83d\udcc8 \u6295\u7a3f\u30d1\u30bf\u30fc\u30f3</h2>\n<ul>\n<li><strong>\u7dcf\u6295\u7a3f\u6570</strong>: 12,744 \u4ef6</li>\n<li><strong>\u671f\u9593</strong>: 2025-10-13 \u301c 2025-11-17 (34 \u65e5\u9593)</li>\n<li><strong>1\u65e5\u5e73\u5747\u6295\u7a3f\u6570</strong>: 364.1 \u4ef6</li>\n<li><strong>\u6700\u3082\u6295\u7a3f\u304c\u591a\u3044\u66dc\u65e5</strong>: \uff08\u30c7\u30fc\u30bf\u304b\u3089\u7b97\u51fa\uff09</li>\n<li><strong>\u6700\u3082\u6295\u7a3f\u304c\u591a\u3044\u6642\u9593\u5e2f</strong>: \uff08\u30c7\u30fc\u30bf\u304b\u3089\u7b97\u51fa\uff09</li>\n</ul>\n<h2 id=\"_3\">\ud83d\udcac \u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u7279\u6027</h2>\n<ul>\n<li><strong>\u5e73\u5747\u3044\u3044\u306d\u6570</strong>: 46.9 / <strong>\u4e2d\u592e\u5024</strong>: 0</li>\n<li><strong>\u5e73\u5747\u30ea\u30dd\u30b9\u30c8\u6570</strong>: 2.7 / <strong>\u4e2d\u592e\u5024</strong>: 0</li>\n<li><strong>\u5e73\u5747\u8fd4\u4fe1\u6570</strong>: 0.2 / <strong>\u4e2d\u592e\u5024</strong>: 0</li>\n<li><strong>\u5e73\u5747\u5f15\u7528\u6570</strong>: 1.5 / <strong>\u4e2d\u592e\u5024</strong>: 0</li>\n<li><strong>\u7dcf\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u6700\u5927</strong>: 91626 \u4ef6</li>\n</ul>\n<h2 id=\"_4\">\ud83c\udfac \u30e1\u30c7\u30a3\u30a2\u52b9\u679c</h2>\n<ul>\n<li><strong>\u30e1\u30c7\u30a3\u30a2\u3042\u308a\u6295\u7a3f</strong>: 4,742 \u4ef6 (37.2%)</li>\n<li><strong>\u30e1\u30c7\u30a3\u30a2\u306a\u3057\u6295\u7a3f</strong>: 8,002 \u4ef6 (62.8%)</li>\n<li><strong>\u30e1\u30c7\u30a3\u30a2\u3042\u308a\u306e\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u500d\u7387</strong>: 7.69\u500d</li>\n</ul>\n<h2 id=\"_5\">\ud83d\udc65 \u30e6\u30fc\u30b6\u30fc\u7279\u6027</h2>\n<ul>\n<li><strong>\u7dcf\u30e6\u30fc\u30b6\u30fc\u6570</strong>: 5,332 \u4eba</li>\n<li><strong>\u30d0\u30c3\u30b8\u4ed8\u304d\u30e6\u30fc\u30b6\u30fc</strong>: 302 \u4eba (5.7%)</li>\n<li><strong>1\u30e6\u30fc\u30b6\u30fc\u5e73\u5747\u6295\u7a3f\u6570</strong>: 2.4 \u4ef6</li>\n<li><strong>\u6700\u591a\u6295\u7a3f\u30e6\u30fc\u30b6\u30fc</strong>: \u304f\u308d\u3042\u3081\uff81\uff6c\uff9d\ud83c\udf6d\ud83d\udda4 (125 \u4ef6)</li>\n</ul>\n<h2 id=\"_6\">\ud83d\udcdd \u30b3\u30f3\u30c6\u30f3\u30c4\u7279\u6027</h2>\n<ul>\n<li><strong>\u5e73\u5747\u6587\u5b57\u6570</strong>: 83.0 \u6587\u5b57</li>\n<li><strong>TOP 3 \u30cf\u30c3\u30b7\u30e5\u30bf\u30b0</strong>: #\u6afb\u4e95\u512a\u8863, #FRUITSZIPPER, #\u30d9\u30b9\u30c8\u30d2\u30c3\u30c8\u6b4c\u8b21\u796d</li>\n<li><strong>URL\u542b\u6709\u7387</strong>: 51.1%</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

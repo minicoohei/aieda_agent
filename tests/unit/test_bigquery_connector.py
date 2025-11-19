@@ -173,3 +173,4 @@ def test_get_table_info_returns_expected_structure():
     assert info["labels"] == {"env": "dev"}
     assert info["table_type"] == "TABLE"
 
+
