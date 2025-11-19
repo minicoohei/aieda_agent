@@ -1,0 +1,13 @@
+---
+description: "開発プロセスとツール活用のルール"
+globs: ["src/**/*", "tests/**/*"]
+---
+
+# Development Process Rules
+
+1. 可能な限りテストファースト（TDD）で進め、ユニットテスト→統合テストの順で追加する。
+2. Serena MCPなどの検証手段がある場合は実装前後で活用し、結果を共有する。
+3. コードベース全体の構造把握や影響範囲の調査は、Serena MCPのシンボリック系ツール（`get_symbols_overview` / `find_symbol` / `find_referencing_symbols` など）を優先的に用いて実施する。
+4. 新しいAPIやライブラリの用法・最新リリース情報が不明な場合は、Context7（`context7` MCP）で公式ドキュメントを参照し、引用元を明示する。
+5. 既存の変更は元に戻さず、必要な場合は利用者へ確認する。
+6. 環境変数（例: `GOOGLE_APPLICATION_CREDENTIALS`）は常設で書き換えず、`env -u VAR <command>` や `VAR=value <command>` の一時的な上書きで運用し、他プロジェクトへ影響させない。
