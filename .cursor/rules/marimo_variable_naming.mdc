@@ -1,0 +1,189 @@
+# Marimo Notebook 変数命名ルール
+
+## 🚨 重要な制約
+
+Marimoノートブックでは**変数の再定義が禁止**されています。異なるセル間で同じ変数名を使用するとエラーになります。
+
+## ✅ 正しい命名パターン
+
+### 1. ループ変数には固有の接尾辞を付ける
+
+```python
+# ❌ 悪い例（複数のセルで同じ変数名）
+@app.cell
+def _(data):
+    for idx, (name, value) in enumerate(data.items()):
+        process(name, value)
+    return idx, name, value  # これらの変数が他のセルと衝突する
+
+# ✅ 良い例（セルごとに固有の接尾辞）
+@app.cell
+def _(data):
+    for idx_proc, (name_proc, value_proc) in enumerate(data.items()):
+        process(name_proc, value_proc)
+    return idx_proc, name_proc, value_proc
+```
+
+### 2. セル固有のプレフィックス/サフィックスを使用
+
+```python
+# ❌ 悪い例
+@app.cell
+def _(df):
+    fig, axes = plt.subplots(2, 2)
+    for idx, ax in enumerate(axes.flatten()):
+        ax.plot(data[idx])
+    return fig, axes, idx, ax
+
+@app.cell
+def _(df):
+    fig, axes = plt.subplots(3, 3)  # エラー: fig, axes が再定義
+    return fig, axes
+
+# ✅ 良い例
+@app.cell
+def _(df):
+    fig_overview, axes_overview = plt.subplots(2, 2)
+    for idx_ov, ax_ov in enumerate(axes_overview.flatten()):
+        ax_ov.plot(data[idx_ov])
+    return fig_overview, axes_overview
+
+@app.cell
+def _(df):
+    fig_detail, axes_detail = plt.subplots(3, 3)
+    for idx_det, ax_det in enumerate(axes_detail.flatten()):
+        ax_det.plot(data[idx_det])
+    return fig_detail, axes_detail
+```
+
+### 3. データ処理の段階ごとに異なる変数名
+
+```python
+# ❌ 悪い例
+@app.cell
+def _(raw_data):
+    for row in raw_data:
+        process(row)
+    return row
+
+@app.cell
+def _(processed_data):
+    for row in processed_data:  # エラー: row が再定義
+        analyze(row)
+    return row
+
+# ✅ 良い例
+@app.cell
+def _(raw_data):
+    for row_raw in raw_data:
+        process(row_raw)
+    return row_raw
+
+@app.cell
+def _(processed_data):
+    for row_proc in processed_data:
+        analyze(row_proc)
+    return row_proc
+```
+
+## 📝 命名規則のベストプラクティス
+
+### セル目的別の接尾辞推奨例
+
+| セルの目的 | 推奨接尾辞 | 例 |
+|----------|---------|---|
+| データ取得 | `_fetch`, `_load` | `df_fetch`, `result_load` |
+| 前処理 | `_prep`, `_clean` | `data_prep`, `values_clean` |
+| 統計分析 | `_stat`, `_calc` | `mean_stat`, `corr_calc` |
+| 可視化（静的） | `_static`, `_plot` | `fig_static`, `ax_plot` |
+| 可視化（動的） | `_dyn`, `_inter` | `net_dyn`, `chart_inter` |
+| モデル学習 | `_train`, `_fit` | `model_train`, `scaler_fit` |
+| 評価 | `_eval`, `_test` | `score_eval`, `pred_test` |
+| レポート生成 | `_report`, `_out` | `content_report`, `path_out` |
+
+### グループ/カテゴリ別の接尾辞
+
+```python
+# ネットワーク分析での例
+for idx_net, (group_name_net, data_net) in enumerate(networks.items()):
+    G_net = data_net['graph']
+    pos_net = nx.spring_layout(G_net)
+    # ...
+
+# ヒートマップ描画での例
+for idx_heat, (group_name_heat, data_heat) in enumerate(heatmap_data.items()):
+    values_heat = data_heat['values']
+    # ...
+```
+
+## 🔍 よくあるエラーパターンと修正
+
+### パターン1: ループカウンタの衝突
+
+```python
+# ❌ 悪い
+for idx in range(10): ...
+for idx in range(5): ...  # 別のセルでエラー
+
+# ✅ 良い
+for idx_first in range(10): ...
+for idx_second in range(5): ...
+```
+
+### パターン2: 一時変数の衝突
+
+```python
+# ❌ 悪い
+G = build_graph(data1)
+G = build_graph(data2)  # 別のセルでエラー
+
+# ✅ 良い
+G_main = build_graph(data1)
+G_compare = build_graph(data2)
+```
+
+### パターン3: プロット変数の衝突
+
+```python
+# ❌ 悪い
+fig, ax = plt.subplots()
+fig, ax = plt.subplots()  # 別のセルでエラー
+
+# ✅ 良い
+fig_time, ax_time = plt.subplots()
+fig_dist, ax_dist = plt.subplots()
+```
+
+## ⚠️ 返り値（return）の注意
+
+セルの`return`文で返す変数は、他のセルでインポート可能になります。不要な変数を返さないように注意してください。
+
+```python
+# ❌ 悪い（ループ変数まで返している）
+@app.cell
+def _(data):
+    results = []
+    for idx, item in enumerate(data):
+        results.append(process(item))
+    return results, idx, item  # idx, item は不要
+
+# ✅ 良い（必要な変数のみ返す）
+@app.cell
+def _(data):
+    results = []
+    for idx_proc, item_proc in enumerate(data):
+        results.append(process(item_proc))
+    return (results,)  # カンマを忘れずに
+```
+
+## 🛠️ デバッグ時のチェックリスト
+
+1. ✅ 各セルで固有の変数名を使用しているか？
+2. ✅ ループ変数に適切な接尾辞を付けているか？
+3. ✅ `return`文で不要な変数を返していないか？
+4. ✅ セル間で変数名が衝突していないか？
+
+## 参考
+
+- Marimo公式ドキュメント: https://docs.marimo.io/guides/reactivity.html
+- 変数再定義エラーの詳細: https://docs.marimo.io/guides/reactivity.html#multiple-definition-error
