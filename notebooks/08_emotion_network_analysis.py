@@ -83,8 +83,13 @@ def _():
             del os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
     
     # Gemini API設定（新SDK: google-genai）
-    GEMINI_API_KEY = "***REDACTED***"
-    genai_client = genai.Client(api_key=GEMINI_API_KEY)
+    # 環境変数から読み込み: export GEMINI_API_KEY="your-api-key"
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+    if GEMINI_API_KEY:
+        genai_client = genai.Client(api_key=GEMINI_API_KEY)
+    else:
+        genai_client = None
+        print("⚠️ GEMINI_API_KEY が設定されていません。API抽出機能は使用できません。")
     
     # 日本語トークナイザー
     tokenizer = Tokenizer()
