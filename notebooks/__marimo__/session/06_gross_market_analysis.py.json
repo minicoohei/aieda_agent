@@ -6,32 +6,32 @@
   "cells": [
     {
       "id": "Hbol",
-      "code_hash": "f6e6c8e220b6e05f80832b5fdcdce614",
+      "code_hash": "e2f3455bb5358030f2d6071f3ddf8073",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"gross-market-analysis\">\ud83c\udf0f \u30b0\u30ed\u30b9\u5e02\u5834\u898f\u6a21\u5206\u6790 (Gross Market Analysis)</h1>\n<span class=\"paragraph\"><code>dev_yoake_posts</code> \u30c7\u30fc\u30bf\u30bb\u30c3\u30c8\u5168\u4f53\u3092\u5bfe\u8c61\u3068\u3057\u305f\u3001\u30a2\u30a4\u30c9\u30eb\u30d5\u30a1\u30f3\u5e02\u5834\u306e\u898f\u6a21\u3068\u6210\u9577\u6027\u306e\u5305\u62ec\u7684\u5206\u6790\u3002</span>\n<h2 id=\"_1\">\ud83c\udfaf \u76ee\u7684</h2>\n<ol>\n<li><strong>\u5e02\u5834\u898f\u6a21\u306e\u628a\u63e1</strong>: \u7dcf\u6295\u7a3f\u6570\u3001\u30a2\u30af\u30c6\u30a3\u30d6\u30e6\u30fc\u30b6\u30fc\u6570(DAU)\u3001\u7dcf\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u6570\u306e\u63a8\u79fb\u3002</li>\n<li><strong>\u6210\u9577\u6027\u306e\u53ef\u8996\u5316</strong>: \u7d2f\u7a4d\u30e6\u30cb\u30fc\u30af\u30e6\u30fc\u30b6\u30fc\u6570(Cumulative UU)\u306e\u63a8\u79fb\u3002</li>\n<li><strong>\u30b7\u30a7\u30a2\u6bd4\u8f03</strong>: \u30a2\u30a4\u30c9\u30eb/\u30b0\u30eb\u30fc\u30d7\u3054\u3068\u306e\u30b7\u30a7\u30a2\u30fb\u30aa\u30d6\u30fb\u30dc\u30a4\u30b9\u3068\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u52b9\u7387\u3002</li>\n<li><strong>\u30e6\u30fc\u30b6\u30fc\u69cb\u9020</strong>: \u30d5\u30a1\u30f3\u5c64\u306e\u96c6\u4e2d\u5ea6\u3068\u884c\u52d5\u7279\u6027\u3002</li>\n</ol>\n<h2 id=\"_2\">\ud83d\udee0\ufe0f \u8a2d\u5b9a</h2>\n<ul>\n<li><strong>\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9</strong>: <code>yoake-dev-analysis.dev_yoake_posts.*</code></li>\n<li><strong>\u9664\u5916\u5bfe\u8c61</strong>: \u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8\uff08\u904b\u55b6\u3001\u30e1\u30f3\u30d0\u30fc\u672c\u4eba\uff09\u3092\u9664\u5916\u3057\u3001\u7d14\u7c8b\u306a\u30d5\u30a1\u30f3\u6d3b\u52d5\u3092\u8a08\u6e2c\u3002</li>\n</ul></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"gross-market-analysis\">\ud83c\udf0f \u30b0\u30ed\u30b9\u5e02\u5834\u898f\u6a21\u5206\u6790 (Gross Market Analysis)</h1>\n<span class=\"paragraph\"><code>dev_yoake_posts</code> \u30c7\u30fc\u30bf\u30bb\u30c3\u30c8\u5168\u4f53\u3092\u5bfe\u8c61\u3068\u3057\u305f\u3001\u30a2\u30a4\u30c9\u30eb\u30d5\u30a1\u30f3\u5e02\u5834\u306e\u898f\u6a21\u3068\u6210\u9577\u6027\u306e\u5305\u62ec\u7684\u5206\u6790\u3002</span>\n<h2 id=\"_1\">\ud83c\udfaf \u76ee\u7684</h2>\n<ol>\n<li><strong>\u5e02\u5834\u898f\u6a21\u306e\u628a\u63e1</strong>: \u7dcf\u6295\u7a3f\u6570\u3001\u30a2\u30af\u30c6\u30a3\u30d6\u30e6\u30fc\u30b6\u30fc\u6570(DAU)\u3001\u7dcf\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u6570\u306e\u63a8\u79fb\u3002</li>\n<li><strong>\u6210\u9577\u6027\u306e\u53ef\u8996\u5316</strong>: \u7d2f\u7a4d\u30e6\u30cb\u30fc\u30af\u30e6\u30fc\u30b6\u30fc\u6570(Cumulative UU)\u306e\u63a8\u79fb\u3002</li>\n<li><strong>\u30b7\u30a7\u30a2\u6bd4\u8f03</strong>: \u30a2\u30a4\u30c9\u30eb/\u30b0\u30eb\u30fc\u30d7\u3054\u3068\u306e\u30b7\u30a7\u30a2\u30fb\u30aa\u30d6\u30fb\u30dc\u30a4\u30b9\u3068\u30a8\u30f3\u30b2\u30fc\u30b8\u30e1\u30f3\u30c8\u52b9\u7387\u3002</li>\n<li><strong>\u30e6\u30fc\u30b6\u30fc\u69cb\u9020</strong>: \u30d5\u30a1\u30f3\u5c64\u306e\u96c6\u4e2d\u5ea6\u3068\u884c\u52d5\u7279\u6027\u3002</li>\n</ol>\n<h2 id=\"_2\">\ud83d\udee0\ufe0f \u8a2d\u5b9a</h2>\n<ul>\n<li><strong>\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9</strong>: <code>yoake-dev-analysis.dev_yoake_posts.*</code></li>\n<li><strong>\u5206\u6790\u671f\u9593</strong>: 2025\u5e749\u67081\u65e5\u4ee5\u964d</li>\n<li><strong>\u9664\u5916\u5bfe\u8c61</strong>: \u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8\uff08\u904b\u55b6\u3001\u30e1\u30f3\u30d0\u30fc\u672c\u4eba\uff09\u3092\u9664\u5916\u3057\u3001\u7d14\u7c8b\u306a\u30d5\u30a1\u30f3\u6d3b\u52d5\u3092\u8a08\u6e2c\u3002</li>\n</ul></span>"
           }
         }
       ],
       "console": []
     },
     {
-      "id": "PKri",
-      "code_hash": "5aa594d419c02d813d9b92d0a0b27b72",
+      "id": "Xref",
+      "code_hash": "0e885516216c9c4ec1cb0ada38374f1e",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"1-gross-market-dynamics\">\ud83d\udcca 1. Gross Market Dynamics (\u5e02\u5834\u306e\u9f13\u52d5)</h2></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"1-gross-market-dynamics\">\ud83d\udcca 1. Gross Market Dynamics (\u5e02\u5834\u306e\u9f13\u52d5)</h2></span>"
           }
         }
       ],
       "console": []
     },
     {
-      "id": "RGSE",
+      "id": "Kclp",
       "code_hash": "53cf2197229168eaf32561f911833e73",
       "outputs": [
         {
@@ -44,7 +44,7 @@
       "console": []
     },
     {
-      "id": "nWHF",
+      "id": "iLit",
       "code_hash": "09e9e3f6300a4b4fd076c6a6fe145b1f",
       "outputs": [
         {
@@ -57,87 +57,270 @@
       "console": []
     },
     {
+      "id": "TqIu",
+      "code_hash": "4075fdf5f0f647acba510230bc6e1f63",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"_1\">\ud83c\udfaf \u500b\u5225\u30a2\u30a4\u30c9\u30eb\u5206\u6790\uff08\u30a4\u30f3\u30bf\u30e9\u30af\u30c6\u30a3\u30d6\uff09</h2>\n<span class=\"paragraph\">\u30d7\u30eb\u30c0\u30a6\u30f3\u304b\u3089\u30a2\u30a4\u30c9\u30eb\u3092\u9078\u629e\u3057\u3066\u3001\u8a73\u7d30\u306a\u5206\u6790\u3092\u78ba\u8a8d\u3067\u304d\u307e\u3059\u3002</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
       "id": "MJUe",
       "code_hash": "97a9fa3d06d868af1934833f49e54fec",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\u26a0\ufe0f Credential file not found at //config/google-cloud-key.json. Removing env var to use ADC.\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "vblA",
       "code_hash": "3e2f212aae871e63ff7644b9c99f1c4b",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "bkHC",
-      "code_hash": "311708df2ab5d4f01acb485331b63650",
-      "outputs": [],
+      "code_hash": "e889a05bb93664ae16b19ea68a4c032a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">\u274c Query Error: Reauthentication is needed. Please run <code>gcloud auth application-default login</code> to reauthenticate.</span></span>"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "lEQa",
-      "code_hash": "9d0bb0d7301d7a56672ca6f163cc1b73",
-      "outputs": [],
+      "code_hash": "d24233b2b37d3556e388a7f1831a82f8",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
-      "id": "Xref",
-      "code_hash": "92321b8a71fb345151fac397de5328f7",
-      "outputs": [],
+      "id": "PKri",
+      "code_hash": "07af663e250964ccd81a04b0243c8e0f",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "SFPL",
-      "code_hash": "de1e995eb9fc5754431723b7307086ad",
-      "outputs": [],
+      "code_hash": "eab5cf86a8887138c7aad3007f1b4a1e",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "BYtC",
-      "code_hash": "45e30f9e5c0276a8e90840343f72a323",
-      "outputs": [],
+      "code_hash": "774448c8671ccecd4c710f9bf21c93c8",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
-      "id": "Kclp",
-      "code_hash": "45bf2400f4d12864fc7d89581e76cfe0",
-      "outputs": [],
+      "id": "RGSE",
+      "code_hash": "115a6ed21b66a4604f4c0e7ae390a691",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "emfo",
-      "code_hash": "30c896b146d41906f54f409ae001532a",
-      "outputs": [],
+      "code_hash": "d349d5fd3baf5a24559e264a6a11be21",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "Hstk",
-      "code_hash": "d4d3de6f91af27892b00a278a6518417",
-      "outputs": [],
+      "code_hash": "a236b3a43cbc0572dcb305fa510c75c3",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
-      "id": "iLit",
-      "code_hash": "75f31773935fb8b6242742b5a6b2dde2",
-      "outputs": [],
+      "id": "nWHF",
+      "code_hash": "f17c081c4a739dfc7e15db815379700c",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "ZHCJ",
-      "code_hash": "97872e4c7dfbd9fefcd5e160b0e0d941",
-      "outputs": [],
+      "code_hash": "9e130040f56f4083c76063eb67e003f3",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "ROlb",
-      "code_hash": "95065195ee6eeb9e209518e8ec6e7c2f",
-      "outputs": [],
+      "code_hash": "c0a2b076e08480c757c76cc6a8dbb1d3",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     },
     {
       "id": "qnkX",
-      "code_hash": "c002f9ceb6ca14cac6b731e7633100c4",
-      "outputs": [],
+      "code_hash": "19c9eb38639966f7e9a4e051814df0e5",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "01309ca2d2055558eb25e6d51e968067",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "989d8de0b47f9e8e5dd20c5aab2f6a3b",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "fcf407c0a092f71f99fe527466f5abdf",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "6804e8b79db71ad4a9d22c31743a7229",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "beb40b53fedb2c250cc691117572fe4d",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
       "console": []
     }
   ]

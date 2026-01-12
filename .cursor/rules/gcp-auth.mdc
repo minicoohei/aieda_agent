@@ -1,0 +1,51 @@
+---
+description: "GCP Application Default Credentials の認証ガイド。BigQuery等のGCPサービス利用前に実行"
+globs: 
+  - "**/*.py"
+  - "**/notebooks/**"
+alwaysApply: false
+---
+
+# GCP認証スキル
+
+## 概要
+BigQuery等のGCPサービスを使用する際に必要な認証手順です。
+
+## 認証コマンド
+
+### 1. Application Default Credentials (ADC) でログイン
+```bash
+gcloud auth application-default login
+```
+
+### 2. 実行後の流れ
+1. ブラウザが自動的に開く
+2. Googleアカウントでログイン
+3. 「Google Auth Library にアクセスを許可」画面で「許可」をクリック
+4. ターミナルに「Credentials saved to file」と表示されれば完了
+
+## トラブルシューティング
+
+### 「Reauthentication is needed」エラー
+認証が期限切れです。上記コマンドを再実行してください。
+
+### GOOGLE_APPLICATION_CREDENTIALS 環境変数の警告
+`.env` ファイルに `GOOGLE_APPLICATION_CREDENTIALS` が設定されている場合：
+- 無効なパスなら削除してください
+- ADC を使う場合は不要です
+
+### プロジェクトの確認
+```bash
+gcloud config get-value project
+```
+
+### プロジェクトの設定
+```bash
+gcloud config set project YOUR_PROJECT_ID
+```
+
+## 認証状態の確認
+```bash
+gcloud auth application-default print-access-token
+```
+トークンが表示されれば認証済みです。

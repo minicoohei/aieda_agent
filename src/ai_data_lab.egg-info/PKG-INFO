@@ -21,6 +21,17 @@ Requires-Dist: pydantic-settings>=2.6.1
 Requires-Dist: python-dotenv>=1.0.1
 Requires-Dist: fsspec>=2024.6.1
 Requires-Dist: rich>=13.9.4
+Requires-Dist: pyvis>=0.3.2
+Requires-Dist: google-generativeai>=0.8.0
+Requires-Dist: wordcloud>=1.9.3
+Requires-Dist: scikit-learn>=1.3.0
+Requires-Dist: janome>=0.5.0
+Requires-Dist: networkx>=3.0
+Requires-Dist: seaborn>=0.13.0
+Requires-Dist: matplotlib>=3.7.0
+Requires-Dist: google-genai>=1.52.0
+Requires-Dist: pillow>=12.0.0
+Requires-Dist: tabulate>=0.9.0
 Provides-Extra: dev
 Requires-Dist: pytest>=8.3.3; extra == "dev"
 Requires-Dist: pytest-dotenv>=0.5.2; extra == "dev"
@@ -126,6 +137,30 @@ uv run marimo run notebooks/analysis.py --port 4175
 | その他 | カスタム用途 | 4176～ |
 
 > マルチエージェント環境では、各エージェントが異なるポート番号を使用するように調整してください。
+
+### 自動ポート割当と SessionRegistry
+
+- `src/ai_data_lab/ports.py` の `PortAllocator` が `MARIMO_PORT_RANGE`（例: `41000-41999`）内で空きポートをスキャンし、自動で割り当てます。
+- `MARIMO_PORT` もしくは `MARIMO_PORT_FIXED` を設定すると、自動割当をスキップして固定ポートを使用します（空いていない場合は起動前にエラー）。
+- 起動した notebook/ポート/PID は `src/ai_data_lab/eda/session_registry.py` の `SessionRegistry` によって `.marimo/sessions.json` に保存されます。Cursor の別エージェントや別 worktree からこのファイルを参照すれば、既存セッションへのアタッチや URL 共有が簡単です。
+
+#### direnv での推奨設定
+
+```
+# .envrc （各 worktree ごとに設定）
+export MARIMO_PORT_RANGE="41000-41999"
+
+layout python
+
+if [ -f .marimo/sessions.json ]; then
+  echo "Active marimo sessions:"
+  jq -r '.sessions[] | "- " + .notebook + " -> " + .url' .marimo/sessions.json
+fi
+```
+
+- worktree ごとに `MARIMO_PORT_RANGE` を変えておけば、Cursor のマルチエージェントでも衝突しづらくなります。
+- 起動後のポートを direnv に「渡す」ことはできないため、`.marimo/sessions.json` を共通の真実として使い、必要に応じて `jq` などで利用者に通知する運用を推奨しています。
+
 
 ## セットアップ（ローカル実行）
 
@@ -250,18 +285,50 @@ uvx --from git+https://github.com/oraios/serena \
 
 ## コードスタイル / ルール
 
-- `.cursor.rules` に分析ルールを定義（目的明記、データ品質、バイアス防止、Squarify/Colab Chartsスタイルの可視化方針など）。
-- Notebookは `edit_notebook` ツール経由で編集し、仮想環境（uv）を使用。
+- `.cursor/rules/` に分析ルールを分割管理（communication, development, data_analysis, notebook, visualization, analysis_modes）。
+- `.cursor/rules_background/` に各ルールの背景説明とベストプラクティスを記載。
+- 自動EDAツール（YData Profiling, AutoViz）を積極的に活用してデータの全体像を把握。
+- NotebookはMarimoを使用し、`edit_notebook` ツール経由で編集。仮想環境（uv）を使用。
 - データ補完・加工時には根拠をNotebookに記述し、トレーサビリティを保つ。
+
+## 包括的分析フレームワーク
+
+アイドル・グループ・ファンダムの比較分析など、大規模な分析タスクを**並列実行**できるフレームワークを提供しています。
+
+### 特徴
+
+- **自動ポート割り当て**: 各エージェントが独立したポートを自動取得（41000-41999）
+- **並列実行**: Phase 2とPhase 3を同時実行し、分析時間を大幅短縮
+- **高解像度画像生成**: 全ての可視化を300 DPIで出力（エビデンス提示モード）
+- **統合レポート**: Markdown + HTMLで画像を多用したレポート自動生成
+
+### 実行方法
+
+```bash
+# マスターコーディネーターを起動
+uv run marimo edit notebooks/05_comprehensive_analysis_coordinator.py --port 40000
+```
+
+詳細は [包括的分析実行ガイド](docs/COMPREHENSIVE_ANALYSIS_GUIDE.md) を参照してください。
+
+### 分析フロー
+
+```
+Phase 1: データ収集 → Phase 2 & 3: 統計/テキスト分析（並列）→ Phase 4: 比較分析 → Phase 5: レポート統合
+```
+
+各Phaseは独立したMarimoノートブックとして実装され、依存関係に基づいて自動的に実行順序が管理されます。
 
 ## 今後のロードマップ
 
-1. `config.py`（Pydantic Settings）実装とテスト
-2. DuckDB / Filesystem コネクタ実装
-3. marimo ポータル（ソース選択 + プレビュー + 保存）
-4. EDAタブ（YData Profiling / AutoViz / Squarify）
-5. S3 / Sheets / BigQuery コネクタ
-6. CI（unitテスト）と integration / eda トリガ
+1. ✅ 包括的分析フレームワークの実装（並列実行・自動ポート割り当て）
+2. `config.py`（Pydantic Settings）実装とテスト
+3. DuckDB / Filesystem コネクタ実装
+4. Marimo ポータル（ソース選択 + プレビュー + 保存）
+5. EDAタブ（YData Profiling / AutoViz）の統合 - Marimoで実装
+6. S3 / Sheets / BigQuery コネクタ
+7. CI（unitテスト）と integration / eda トリガ
+8. リアルタイム分析ダッシュボード
 
 ご意見・要望があれば Issue / PR / DM でお知らせください。
 

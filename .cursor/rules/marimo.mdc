@@ -1,0 +1,116 @@
+---
+description: "Marimo Notebook作成・編集の統合ルール (Agent & Human)"
+globs: ["notebooks/**/*.py", "**/*.py"]
+---
+
+# Marimo Notebook Development Rules
+
+あなたはmarimoを使ってデータ分析Notebookを作成・編集する専門家です。
+以下のルールに従って、再現性が高く、可読性の高いコードを作成してください。
+
+## 1. Marimoの基本原則 (Fundamentals)
+
+- **Reactive Execution**: 変数が変更されると、依存するセルが自動的に再実行されます。
+- **No Side Effects**: グローバル変数の再定義は禁止です（DAG構造を維持するため）。
+- **Python-First**: Notebookは純粋なPythonファイル（.py）として保存されます。
+- **App Structure**: `import marimo as mo` は必須です。
+
+## 2. コード要件 (Code Requirements)
+
+1. **Imports**: すべてのimportは最初のセル（または専用のimportセル）にまとめ、必ず `import marimo as mo` を含める。
+2. **Execution Order**: Notebookの依存グラフにサイクル（循環参照）を作らない。
+3. **Display**: セルの最後の式は自動的に表示される（Jupyterと同様）。`mo.ui` 要素も表示が必要。
+4. **No Global Mutation**: `global` キーワードは使用しない。
+5. **Linting**: エラーがない完全な実行可能なコードを記述する。
+
+## 3. 変数命名と管理 (Variable Naming & Management)
+
+Marimoでは**変数の再定義が禁止**されています。異なるセルで同じ変数名（`df`, `fig`, `ax`など）を使うとエラーになります。
+
+### 命名規則 (Naming Conventions)
+セルごとの役割に応じて、以下の接尾辞を推奨します。
+
+| セルの目的 | 推奨接尾辞 | 例 |
+|----------|---------|---|
+| データ取得 | `_fetch`, `_load` | `df_fetch`, `result_load` |
+| 前処理 | `_prep`, `_clean` | `data_prep`, `values_clean` |
+| 統計分析 | `_stat`, `_calc` | `mean_stat`, `corr_calc` |
+| 可視化 | `_plot`, `_chart` | `chart_plot`, `fig_overview` |
+| UI要素 | `_ui`, `_widget` | `slider_ui`, `dropdown_widget` |
+| レポート | `_report`, `_out` | `content_report`, `path_out` |
+
+### ループ変数
+`for i in range(10):` のような `i` もグローバルスコープになるため、`for i_idx in ...` や `for ax_main in ...` のようにユニークな名前を使う。
+
+## 4. データ処理 (Data Handling)
+
+- **Library**: データ操作には `polars` を推奨（高速・型安全）。`pandas` も可。
+- **Validation**: 欠損値、異常値、重複を確認し、処理方針を明記する。
+- **Traceability**: データセットの読み込み・保存時は、ファイル名に日付や粒度を含める（例: `sales_daily_20250301.csv`）。
+- **Progress**: 時間がかかる処理（API呼び出し、大量ループ）には `tqdm` を使用する。
+
+```python
+from tqdm import tqdm
+for item in tqdm(items, desc="Processing"):
+    process(item)
+```
+
+## 5. UIと可視化 (UI & Visualization)
+
+### UI Elements
+- UI要素の値には `.value` でアクセスする。
+- **重要**: UI定義と値の参照は**必ず別のセル**で行う。
+
+#### ⚠️ 同じセルでの `.value` アクセスは禁止
+
+UIElementを作成したセルで `.value` にアクセスすると `RuntimeError` が発生します。
+
+```python
+# ❌ NG: 同じセルで .value にアクセス
+@app.cell
+def _(mo):
+    text_input = mo.ui.text(value="default")
+    mo.md(f"入力値: {text_input.value}")  # RuntimeError!
+    return (text_input,)
+
+# ✅ OK: 別のセルで .value にアクセス
+@app.cell
+def _(mo):
+    text_input = mo.ui.text(value="default")
+    text_input  # UIを表示
+    return (text_input,)
+
+@app.cell
+def _(mo, text_input):
+    mo.md(f"入力値: {text_input.value}")  # OK
+    return
+```
+
+### Visualization
+- **Altair**: `chart` オブジェクトを直接返す（推奨）。`polars` データフレームを直接渡せる。ツールチップを追加してインタラクティブにする。
+- **Plotly**: `mo.ui.plotly(fig)` を使用するか、Figureオブジェクトを返す。
+- **Matplotlib**: `plt.show()` ではなく `plt.gca()` または Figureオブジェクトを返す。`fig`や`ax`の変数名重複に注意する。
+
+## 6. SQL & Database
+
+- **DuckDB**: `mo.sql` セルを使用する。
+  ```python
+  df_result = mo.sql(f"SELECT * FROM df_source WHERE id > 100")
+  ```
+- **BigQuery**: 重複データの扱いに注意（特に `_PARTITIONTIME` を使う場合）。重複除去クエリを適用する。
+
+## 7. デバッグと品質 (Debug & Quality)
+
+- **EDA**: 初期分析では `ydata-profiling` や `mo.ui.data_explorer(df)` を活用してデータの全体像を把握する。
+- **Error Handling**: 変数再定義エラーが出たら、変数名に接尾辞をつけてユニークにする。
+
+## 8. AI Agentへの指示 (For Agent)
+
+Notebookを編集する際は、`@app.cell` デコレータ内の関数 `_()` の中身を編集してください。
+引数やreturn文はmarimoが自動管理しますが、Agentがコードを生成する際は完全な形（import含む）を意識してください。
+
+
+
+
+
+

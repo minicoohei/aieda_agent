@@ -1,5 +1,6 @@
 README.md
 pyproject.toml
+src/ai_data_lab/ports.py
 src/ai_data_lab.egg-info/PKG-INFO
 src/ai_data_lab.egg-info/SOURCES.txt
 src/ai_data_lab.egg-info/dependency_links.txt
@@ -7,3 +8,7 @@ src/ai_data_lab.egg-info/requires.txt
 src/ai_data_lab.egg-info/top_level.txt
 src/ai_data_lab/connectors/__init__.py
 src/ai_data_lab/connectors/bigquery.py
+src/ai_data_lab/eda/__init__.py
+src/ai_data_lab/eda/marimo_launcher.py
+src/ai_data_lab/eda/parallel_coordinator.py
+src/ai_data_lab/eda/session_registry.py
