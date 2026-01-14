@@ -44,8 +44,23 @@ def _():
     from dotenv import load_dotenv
 
     # .env ファイルを読み込み
-    root_dir = Path(__file__).parent.parent
-    load_dotenv(root_dir / ".env")
+    # Marimoでは__file__が一時ファイルを指す場合があるため、複数のパスを試行
+    possible_env_paths = [
+        Path(__file__).parent.parent / ".env",  # 通常のパス
+        Path.cwd() / ".env",  # カレントディレクトリ
+        Path.cwd().parent / ".env",  # 親ディレクトリ
+        Path("/Users/kou1904/githubactions_fordata/work/aieda_agent/.env"),  # 絶対パス
+    ]
+
+    env_loaded = False
+    for env_path in possible_env_paths:
+        if env_path.exists():
+            load_dotenv(env_path)
+            env_loaded = True
+            break
+
+    # root_dirは他の箇所でも使用するため設定
+    root_dir = Path("/Users/kou1904/githubactions_fordata/work/aieda_agent")
 
     # GOOGLE_APPLICATION_CREDENTIALS が無効な値の場合は削除
     if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
@@ -58,7 +73,7 @@ def _():
         sys.path.insert(0, str(root_dir / "src"))
 
     from ai_data_lab.connectors.bigquery import BigQueryConnector
-    return BigQueryConnector, Counter, mo, np, pd, re
+    return BigQueryConnector, Counter, mo, np, os, pd, re
 
 
 @app.cell
@@ -580,11 +595,6 @@ def _(mo):
 
 
 @app.cell
-def _():
-    return
-
-
-@app.cell
 def _(df_user_analysis_filtered, mo, pd):
     """アイドル×グループのクロス集計テーブル"""
 
@@ -807,7 +817,7 @@ def _(mo):
 
 
 @app.cell
-def _(df_user_analysis_filtered, mo, np, pd):
+def _(df_user_analysis_filtered, mo, pd):
     """ロイヤリティ層別分析（四分位分割）"""
 
     if df_user_analysis_filtered.empty:
@@ -1442,32 +1452,28 @@ def _(mo):
 
 
 @app.cell
-def _(
-    DATA_END_DATE,
-    DATA_START_DATE,
-    df_all_posts,
-    df_user_baseline,
-    mo,
-    pd,
-):
-    """投稿サンプリング: 各ユーザーから前後それぞれ最大10件をランダムサンプリング"""
+def _(DATA_END_DATE, DATA_START_DATE, df_all_posts, df_user_baseline, mo, pd):
+    """投稿サンプリング: Treatment群は全件、Control群はTreatment群と同数をサンプリング"""
     from tqdm import tqdm as tqdm_sample
 
     SAMPLE_PER_USER_PERIOD = 10  # ユーザーあたり前後各10件
-    MAX_TOTAL_SAMPLES = 3000  # 最大サンプル数
 
     if df_user_baseline.empty:
         sampling_result = mo.md("⚠️ ベースラインデータがありません。")
         df_sampled_posts = pd.DataFrame()
     else:
+        # Treatment群とControl群を分離
+        treatment_users_df = df_user_baseline[df_user_baseline["group"] == "Treatment"]
+        control_users_df = df_user_baseline[df_user_baseline["group"] == "Control"]
+
         sampled_records = []
 
-        for _, row_sample in tqdm_sample(df_user_baseline.iterrows(), total=len(df_user_baseline), desc="📊 サンプリング中"):
+        # Treatment群: 全ユーザーからサンプリング
+        for _, row_sample in tqdm_sample(treatment_users_df.iterrows(), total=len(treatment_users_df), desc="📊 Treatment群サンプリング中"):
             uid_sample = row_sample["account_id"]
             group_sample = row_sample["group"]
             baseline_sample = row_sample["baseline_date"]
 
-            # ユーザーの投稿を取得（メンバー名タグを含む）
             user_posts_sample = df_all_posts[
                 (df_all_posts["account_id"] == uid_sample) &
                 (df_all_posts["has_member_tag"]) &
@@ -1475,12 +1481,9 @@ def _(
                 (df_all_posts["created_at"] <= DATA_END_DATE)
             ].copy()
 
-            # 前の期間
             posts_before_sample = user_posts_sample[user_posts_sample["created_at"] < baseline_sample]
-            # 後の期間
             posts_after_sample = user_posts_sample[user_posts_sample["created_at"] >= baseline_sample]
 
-            # ランダムサンプリング
             if len(posts_before_sample) > 0:
                 n_sample_before = min(SAMPLE_PER_USER_PERIOD, len(posts_before_sample))
                 sampled_before = posts_before_sample.sample(n=n_sample_before, random_state=42)
@@ -1507,11 +1510,66 @@ def _(
                         "created_at": post_row["created_at"],
                     })
 
-        df_sampled_posts = pd.DataFrame(sampled_records)
+        # Treatment群のサンプル数を記録
+        treatment_sample_count = len(sampled_records)
 
-        # 最大サンプル数を超える場合は更にサンプリング
-        if len(df_sampled_posts) > MAX_TOTAL_SAMPLES:
-            df_sampled_posts = df_sampled_posts.sample(n=MAX_TOTAL_SAMPLES, random_state=42)
+        # Control群: Treatment群と同数になるようにサンプリング
+        # まずControl群のユーザーをシャッフル
+        control_users_shuffled_df = control_users_df.sample(frac=1, random_state=42)
+        control_sample_count = 0
+
+        for _, row_sample in tqdm_sample(control_users_shuffled_df.iterrows(), total=len(control_users_shuffled_df), desc="📊 Control群サンプリング中"):
+            # Treatment群と同数に達したら終了
+            if control_sample_count >= treatment_sample_count:
+                break
+
+            uid_sample = row_sample["account_id"]
+            group_sample = row_sample["group"]
+            baseline_sample = row_sample["baseline_date"]
+
+            user_posts_sample = df_all_posts[
+                (df_all_posts["account_id"] == uid_sample) &
+                (df_all_posts["has_member_tag"]) &
+                (df_all_posts["created_at"] >= DATA_START_DATE) &
+                (df_all_posts["created_at"] <= DATA_END_DATE)
+            ].copy()
+
+            posts_before_sample = user_posts_sample[user_posts_sample["created_at"] < baseline_sample]
+            posts_after_sample = user_posts_sample[user_posts_sample["created_at"] >= baseline_sample]
+
+            if len(posts_before_sample) > 0:
+                n_sample_before = min(SAMPLE_PER_USER_PERIOD, len(posts_before_sample))
+                sampled_before = posts_before_sample.sample(n=n_sample_before, random_state=42)
+                for _, post_row in sampled_before.iterrows():
+                    if control_sample_count >= treatment_sample_count:
+                        break
+                    sampled_records.append({
+                        "post_id": post_row["post_id"],
+                        "account_id": uid_sample,
+                        "group": group_sample,
+                        "period": "before",
+                        "content": post_row["content"],
+                        "created_at": post_row["created_at"],
+                    })
+                    control_sample_count += 1
+
+            if len(posts_after_sample) > 0:
+                n_sample_after = min(SAMPLE_PER_USER_PERIOD, len(posts_after_sample))
+                sampled_after = posts_after_sample.sample(n=n_sample_after, random_state=42)
+                for _, post_row in sampled_after.iterrows():
+                    if control_sample_count >= treatment_sample_count:
+                        break
+                    sampled_records.append({
+                        "post_id": post_row["post_id"],
+                        "account_id": uid_sample,
+                        "group": group_sample,
+                        "period": "after",
+                        "content": post_row["content"],
+                        "created_at": post_row["created_at"],
+                    })
+                    control_sample_count += 1
+
+        df_sampled_posts = pd.DataFrame(sampled_records)
 
         # サマリー
         treatment_before_count = len(df_sampled_posts[(df_sampled_posts["group"] == "Treatment") & (df_sampled_posts["period"] == "before")])
@@ -1520,7 +1578,7 @@ def _(
         control_after_count = len(df_sampled_posts[(df_sampled_posts["group"] == "Control") & (df_sampled_posts["period"] == "after")])
 
         sampling_result = mo.md(f"""
-        ### 📋 サンプリング結果
+        ### 📋 サンプリング結果（Control群はTreatment群と同数に制限）
 
         | グループ | 前 | 後 | 合計 |
         |---------|-----|-----|------|
@@ -1529,6 +1587,7 @@ def _(
         | **合計** | {treatment_before_count + control_before_count:,} | {treatment_after_count + control_after_count:,} | **{len(df_sampled_posts):,}** |
 
         ※ 各ユーザーから前後それぞれ最大{SAMPLE_PER_USER_PERIOD}件をサンプリング
+        ※ Control群はTreatment群と同数になるよう制限（API呼び出し削減）
         """)
 
     sampling_result
@@ -1570,18 +1629,30 @@ def _(df_sampled_posts, mo, os, pd):
             # センチメント判定用プロンプト
             def create_sentiment_prompt(posts_batch):
                 posts_text = "\n".join([
-                    f"[{idx_prompt+1}] {post[:200]}" for idx_prompt, post in enumerate(posts_batch)
+                    f"[{idx_prompt+1}] {post[:300]}" for idx_prompt, post in enumerate(posts_batch)
                 ])
-                return f"""以下の投稿のセンチメントを判定してください。
-各投稿について、positive（ポジティブ）、neutral（ニュートラル）、negative（ネガティブ）のいずれかで判定してください。
+                return f"""以下のSNS投稿について、悪意・誹謗中傷の有無、およびポジティブ度を評価してください。
 
-投稿:
-{posts_text}
+    ### 【評価基準】：
+    1. **悪意・誹謗中傷の判定**（malice）
+       - "high": 誹謗中傷、名誉毀損、攻撃的・差別的な内容
+       - "low": 批判的だが、誹謗中傷とまではいえない
+       - "none": 問題なし
 
-JSONフォーマットで回答してください（例）:
-{{"results": ["positive", "neutral", "negative", ...]}}
+    2. **ポジティブ度の評価**（positivity: 0-5）
+       - 5: 非常にポジティブ（感謝・応援・励まし・建設的な意見）
+       - 4: ポジティブ（好意的・肯定的な意見が中心）
+       - 3: ややポジティブ（フラットだが前向きな要素あり）
+       - 2: ニュートラル（良くも悪くもなく中立的）
+       - 1: ややネガティブ（批判的なトーンが含まれる）
+       - 0: ネガティブ（強い否定・攻撃的なトーン）
 
-判定のみを返してください。説明は不要です。"""
+    【投稿内容】：
+    {posts_text}
+
+    【回答フォーマット】（JSONのみ、説明不要）：
+    {{"results": [{{"malice": "none", "positivity": 4}}, {{"malice": "low", "positivity": 1}}, ...]}}
+    """
 
             # バッチ処理
             all_sentiments = []
@@ -1613,22 +1684,44 @@ JSONフォーマットで回答してください（例）:
                         parts = json_text.split("```")
                         if len(parts) >= 2:
                             json_text = parts[1].strip()
-                    
+
                     # JSON部分のみを抽出（{から}まで）
-                    import re
-                    json_match = re.search(r'\{.*\}', json_text, re.DOTALL)
+                    import re as re_json
+                    json_match = re_json.search(r'\{.*\}', json_text, re_json.DOTALL)
                     if json_match:
                         json_text = json_match.group()
 
                     result = json.loads(json_text)
                     batch_sentiments = result.get("results", [])
 
+                    # ポジティブ度から従来のsentimentラベルに変換する関数
+                    # 厳しめの判定基準: 5のみpositive、3-4はneutral、0-2はnegative
+                    def positivity_to_sentiment(positivity_score):
+                        if positivity_score == 5:
+                            return "positive"
+                        elif positivity_score >= 3:
+                            return "neutral"
+                        else:
+                            return "negative"
+
                     # 結果を追加
                     if len(batch_sentiments) == len(batch_ids):
-                        for idx_sent, (pid, sentiment_val) in enumerate(zip(batch_ids, batch_sentiments)):
+                        for idx_sent, (pid, eval_result) in enumerate(zip(batch_ids, batch_sentiments)):
+                            if isinstance(eval_result, dict):
+                                malice = eval_result.get("malice", "none")
+                                positivity = eval_result.get("positivity", 2)
+                                sentiment = positivity_to_sentiment(positivity)
+                            else:
+                                # 旧形式への後方互換性
+                                malice = "none"
+                                positivity = 2
+                                sentiment = eval_result.lower() if isinstance(eval_result, str) else "neutral"
+
                             all_sentiments.append({
                                 "post_id": pid,
-                                "sentiment": sentiment_val.lower() if isinstance(sentiment_val, str) else "neutral"
+                                "malice": malice,
+                                "positivity": positivity,
+                                "sentiment": sentiment
                             })
                         success_count += 1
                     else:
@@ -1637,6 +1730,8 @@ JSONフォーマットで回答してください（例）:
                         for pid in batch_ids:
                             all_sentiments.append({
                                 "post_id": pid,
+                                "malice": "none",
+                                "positivity": 2,
                                 "sentiment": "neutral"
                             })
                         error_count += 1
@@ -1647,6 +1742,8 @@ JSONフォーマットで回答してください（例）:
                     for pid in batch_ids:
                         all_sentiments.append({
                             "post_id": pid,
+                            "malice": "none",
+                            "positivity": 2,
                             "sentiment": "neutral"
                         })
                     error_count += 1
@@ -1658,25 +1755,33 @@ JSONフォーマットで回答してください（例）:
             df_sentiment_results = pd.DataFrame(all_sentiments)
             df_sentiment = df_sampled_posts.merge(df_sentiment_results, on="post_id", how="left")
             df_sentiment["sentiment"] = df_sentiment["sentiment"].fillna("neutral")
+            df_sentiment["malice"] = df_sentiment["malice"].fillna("none")
+            df_sentiment["positivity"] = df_sentiment["positivity"].fillna(2)
 
             # サマリー
             sentiment_counts = df_sentiment.groupby(["group", "period", "sentiment"]).size().unstack(fill_value=0)
+
+            # ポジティブ度の平均
+            positivity_avg = df_sentiment.groupby(["group", "period"])["positivity"].mean().unstack(fill_value=0)
+
+            # 悪意判定の分布
+            malice_counts = df_sentiment.groupby(["group", "period", "malice"]).size().unstack(fill_value=0)
 
             # エラーログの表示
             error_display = ""
             if error_logs:
                 error_display = f"""
-                
+
                 ⚠️ **エラー発生バッチ数**: {error_count} / {total_batches}
-                
+
                 <details>
                 <summary>エラー詳細（クリックで展開）</summary>
-                
+
                 ```
                 {chr(10).join(error_logs[:20])}
                 {"..." if len(error_logs) > 20 else ""}
                 ```
-                
+
                 </details>
                 """
 
@@ -1688,8 +1793,12 @@ JSONフォーマットで回答してください（例）:
                 **成功**: {success_count} バッチ / **エラー**: {error_count} バッチ
                 {error_display}
                 """),
-                mo.md("### センチメント分布"),
+                mo.md("### センチメント分布（positive/neutral/negative）"),
                 mo.ui.table(sentiment_counts.reset_index(), selection=None),
+                mo.md("### ポジティブ度の平均（0-5スケール）"),
+                mo.ui.table(positivity_avg.reset_index(), selection=None),
+                mo.md("### 悪意・誹謗中傷の分布"),
+                mo.ui.table(malice_counts.reset_index(), selection=None),
             ])
 
     sentiment_result
@@ -1705,96 +1814,106 @@ def _(df_sentiment, mo, pd):
         positive_analysis_result = mo.md("⚠️ センチメントデータがありません。")
         df_positive_summary = pd.DataFrame()
     else:
-        # ポジティブ率を計算
-        def calc_positive_rate(df_group):
-            total = len(df_group)
-            positive = len(df_group[df_group["sentiment"] == "positive"])
-            return positive / total * 100 if total > 0 else 0
+        # 前後両方に投稿があるユーザーのみに絞り込み
+        users_with_both_periods = df_sentiment.groupby("account_id")["period"].nunique()
+        valid_users_pos = users_with_both_periods[users_with_both_periods == 2].index
+        df_sentiment_filtered = df_sentiment[df_sentiment["account_id"].isin(valid_users_pos)]
 
-        # グループ×期間ごとの集計
-        positive_rates = {}
-        for group_pos in ["Treatment", "Control"]:
-            for period_pos in ["before", "after"]:
-                subset_pos = df_sentiment[
-                    (df_sentiment["group"] == group_pos) &
-                    (df_sentiment["period"] == period_pos)
-                ]
-                positive_rates[f"{group_pos}_{period_pos}"] = calc_positive_rate(subset_pos)
-
-        # 変化量
-        t_change_pos = positive_rates["Treatment_after"] - positive_rates["Treatment_before"]
-        c_change_pos = positive_rates["Control_after"] - positive_rates["Control_before"]
-        diff_tc_pos = t_change_pos - c_change_pos
-
-        # 統計的検定（カイ二乗検定）
-        # Treatment群の前後でポジティブ数を比較
-        t_before_df = df_sentiment[(df_sentiment["group"] == "Treatment") & (df_sentiment["period"] == "before")]
-        t_after_df = df_sentiment[(df_sentiment["group"] == "Treatment") & (df_sentiment["period"] == "after")]
-        c_before_df = df_sentiment[(df_sentiment["group"] == "Control") & (df_sentiment["period"] == "before")]
-        c_after_df = df_sentiment[(df_sentiment["group"] == "Control") & (df_sentiment["period"] == "after")]
-
-        # 2x2 contingency table for Treatment vs Control (after period)
-        t_after_pos = len(t_after_df[t_after_df["sentiment"] == "positive"])
-        t_after_neg = len(t_after_df) - t_after_pos
-        c_after_pos = len(c_after_df[c_after_df["sentiment"] == "positive"])
-        c_after_neg = len(c_after_df) - c_after_pos
-
-        contingency_table = [[t_after_pos, t_after_neg], [c_after_pos, c_after_neg]]
-
-        try:
-            chi2_pos, p_value_pos, dof_pos, expected_pos = stats_pos.chi2_contingency(contingency_table)
-        except Exception:
-            chi2_pos, p_value_pos = 0, 1.0
-
-        # サマリーテーブル作成
-        summary_data = [
-            {
-                "グループ": "Treatment（IRC参加）",
-                "前": f"{positive_rates['Treatment_before']:.1f}%",
-                "後": f"{positive_rates['Treatment_after']:.1f}%",
-                "変化": f"{t_change_pos:+.1f}pt",
-            },
-            {
-                "グループ": "Control（IRC非参加）",
-                "前": f"{positive_rates['Control_before']:.1f}%",
-                "後": f"{positive_rates['Control_after']:.1f}%",
-                "変化": f"{c_change_pos:+.1f}pt",
-            },
-        ]
-        df_positive_summary = pd.DataFrame(summary_data)
-
-        # 有意性判定
-        if p_value_pos < 0.01:
-            significance_pos = "⭐⭐⭐ 非常に有意 (p < 0.01)"
-        elif p_value_pos < 0.05:
-            significance_pos = "⭐⭐ 有意 (p < 0.05)"
-        elif p_value_pos < 0.10:
-            significance_pos = "⭐ 弱い有意 (p < 0.10)"
+        # フィルタ後のデータが空の場合
+        if df_sentiment_filtered.empty:
+            positive_analysis_result = mo.md("⚠️ 前後両方に投稿があるユーザーがいません。")
+            df_positive_summary = pd.DataFrame()
         else:
-            significance_pos = "有意差なし (p >= 0.10)"
+            # ポジティブ率を計算
+            def calc_positive_rate(df_group):
+                total = len(df_group)
+                positive = len(df_group[df_group["sentiment"] == "positive"])
+                return positive / total * 100 if total > 0 else 0
 
-        positive_analysis_result = mo.vstack([
-            mo.md("### 😊 ポジティブ率の前後比較"),
-            mo.ui.table(df_positive_summary, selection=None),
-            mo.md(f"""
-            ### 分析結果
+            # グループ×期間ごとの集計（フィルタ済みデータを使用）
+            positive_rates = {}
+            for group_pos in ["Treatment", "Control"]:
+                for period_pos in ["before", "after"]:
+                    subset_pos = df_sentiment_filtered[
+                        (df_sentiment_filtered["group"] == group_pos) &
+                        (df_sentiment_filtered["period"] == period_pos)
+                    ]
+                    positive_rates[f"{group_pos}_{period_pos}"] = calc_positive_rate(subset_pos)
 
-            | 指標 | 値 |
-            |------|-----|
-            | Treatment変化 | {t_change_pos:+.1f}pt |
-            | Control変化 | {c_change_pos:+.1f}pt |
-            | **差分（T - C）** | **{diff_tc_pos:+.1f}pt** |
-            | χ²統計量 | {chi2_pos:.4f} |
-            | p値 | {p_value_pos:.4f} |
-            | 有意性 | {significance_pos} |
+            # 変化量
+            t_change_pos = positive_rates["Treatment_after"] - positive_rates["Treatment_before"]
+            c_change_pos = positive_rates["Control_after"] - positive_rates["Control_before"]
+            diff_tc_pos = t_change_pos - c_change_pos
 
-            #### 解釈
-            {"Treatment群（IRC参加者）はControl群と比較して、ポジティブ投稿率に有意な差があります。IRC参加がポジティブな投稿を促進する可能性があります。" if p_value_pos < 0.05 else "Treatment群とControl群のポジティブ投稿率には統計的に有意な差は認められませんでした。"}
-            """),
-        ])
+            # 統計的検定（カイ二乗検定） - フィルタ済みデータを使用
+            t_before_df = df_sentiment_filtered[(df_sentiment_filtered["group"] == "Treatment") & (df_sentiment_filtered["period"] == "before")]
+            t_after_df = df_sentiment_filtered[(df_sentiment_filtered["group"] == "Treatment") & (df_sentiment_filtered["period"] == "after")]
+            c_before_df = df_sentiment_filtered[(df_sentiment_filtered["group"] == "Control") & (df_sentiment_filtered["period"] == "before")]
+            c_after_df = df_sentiment_filtered[(df_sentiment_filtered["group"] == "Control") & (df_sentiment_filtered["period"] == "after")]
+
+            # 2x2 contingency table for Treatment vs Control (after period)
+            t_after_pos = len(t_after_df[t_after_df["sentiment"] == "positive"])
+            t_after_neg = len(t_after_df) - t_after_pos
+            c_after_pos = len(c_after_df[c_after_df["sentiment"] == "positive"])
+            c_after_neg = len(c_after_df) - c_after_pos
+
+            contingency_table = [[t_after_pos, t_after_neg], [c_after_pos, c_after_neg]]
+
+            try:
+                chi2_pos, p_value_pos, dof_pos, expected_pos = stats_pos.chi2_contingency(contingency_table)
+            except Exception:
+                chi2_pos, p_value_pos = 0, 1.0
+
+            # サマリーテーブル作成
+            n_users_filtered = len(valid_users_pos)
+            summary_data = [
+                {
+                    "グループ": "Treatment（IRC参加）",
+                    "前": f"{positive_rates['Treatment_before']:.1f}%",
+                    "後": f"{positive_rates['Treatment_after']:.1f}%",
+                    "変化": f"{t_change_pos:+.1f}pt",
+                },
+                {
+                    "グループ": "Control（IRC非参加）",
+                    "前": f"{positive_rates['Control_before']:.1f}%",
+                    "後": f"{positive_rates['Control_after']:.1f}%",
+                    "変化": f"{c_change_pos:+.1f}pt",
+                },
+            ]
+            df_positive_summary = pd.DataFrame(summary_data)
+
+            # 有意性判定
+            if p_value_pos < 0.01:
+                significance_pos = "⭐⭐⭐ 非常に有意 (p < 0.01)"
+            elif p_value_pos < 0.05:
+                significance_pos = "⭐⭐ 有意 (p < 0.05)"
+            elif p_value_pos < 0.10:
+                significance_pos = "⭐ 弱い有意 (p < 0.10)"
+            else:
+                significance_pos = "有意差なし (p >= 0.10)"
+
+            positive_analysis_result = mo.vstack([
+                mo.md(f"### 😊 ポジティブ率の前後比較（前後両方に投稿があるユーザーのみ: {n_users_filtered:,}名）"),
+                mo.ui.table(df_positive_summary, selection=None),
+                mo.md(f"""
+                ### 分析結果
+
+                | 指標 | 値 |
+                |------|-----|
+                | Treatment変化 | {t_change_pos:+.1f}pt |
+                | Control変化 | {c_change_pos:+.1f}pt |
+                | **差分（T - C）** | **{diff_tc_pos:+.1f}pt** |
+                | χ²統計量 | {chi2_pos:.4f} |
+                | p値 | {p_value_pos:.4f} |
+                | 有意性 | {significance_pos} |
+
+                #### 解釈
+                {"Treatment群（IRC参加者）はControl群と比較して、ポジティブ投稿率に有意な差があります。IRC参加がポジティブな投稿を促進する可能性があります。" if p_value_pos < 0.05 else "Treatment群とControl群のポジティブ投稿率には統計的に有意な差は認められませんでした。"}
+                """),
+            ])
 
     positive_analysis_result
-    return (df_positive_summary,)
+    return
 
 
 @app.cell
@@ -2213,23 +2332,23 @@ def _(df_user_analysis_filtered, mo, pd):
         control_dash = df_user_analysis_filtered[df_user_analysis_filtered["group"] == "Control"]
 
         # 指標1: 投稿数
-        t_count_before = treatment_dash["count_before"].mean()
-        t_count_after = treatment_dash["count_after"].mean()
-        c_count_before = control_dash["count_before"].mean()
-        c_count_after = control_dash["count_after"].mean()
-        t_count_change = (t_count_after - t_count_before) / t_count_before * 100 if t_count_before > 0 else 0
-        c_count_change = (c_count_after - c_count_before) / c_count_before * 100 if c_count_before > 0 else 0
+        t_count_before_dash = treatment_dash["count_before"].mean()
+        t_count_after_dash = treatment_dash["count_after"].mean()
+        c_count_before_dash = control_dash["count_before"].mean()
+        c_count_after_dash = control_dash["count_after"].mean()
+        t_count_change_dash = (t_count_after_dash - t_count_before_dash) / t_count_before_dash * 100 if t_count_before_dash > 0 else 0
+        c_count_change_dash = (c_count_after_dash - c_count_before_dash) / c_count_before_dash * 100 if c_count_before_dash > 0 else 0
 
         # 指標2: 投稿頻度（1日あたり）
-        t_rate_before = treatment_dash["rate_before"].mean()
-        t_rate_after = treatment_dash["rate_after"].mean()
-        c_rate_before = control_dash["rate_before"].mean()
-        c_rate_after = control_dash["rate_after"].mean()
-        t_rate_change = (t_rate_after - t_rate_before) / t_rate_before * 100 if t_rate_before > 0 else 0
-        c_rate_change = (c_rate_after - c_rate_before) / c_rate_before * 100 if c_rate_before > 0 else 0
+        t_rate_before_dash = treatment_dash["rate_before"].mean()
+        t_rate_after_dash = treatment_dash["rate_after"].mean()
+        c_rate_before_dash = control_dash["rate_before"].mean()
+        c_rate_after_dash = control_dash["rate_after"].mean()
+        t_rate_change_dash = (t_rate_after_dash - t_rate_before_dash) / t_rate_before_dash * 100 if t_rate_before_dash > 0 else 0
+        c_rate_change_dash = (c_rate_after_dash - c_rate_before_dash) / c_rate_before_dash * 100 if c_rate_before_dash > 0 else 0
 
         # 投稿頻度のt検定
-        _, p_rate = stats_dashboard.ttest_ind(
+        _, p_rate_dash = stats_dashboard.ttest_ind(
             treatment_dash["rate_after"] - treatment_dash["rate_before"],
             control_dash["rate_after"] - control_dash["rate_before"],
             equal_var=False
@@ -2239,25 +2358,25 @@ def _(df_user_analysis_filtered, mo, pd):
         dashboard_data = [
             {
                 "指標": "📝 投稿数",
-                "T前": f"{t_count_before:.1f}",
-                "T後": f"{t_count_after:.1f}",
-                "T変化": f"{t_count_change:+.0f}%",
-                "C前": f"{c_count_before:.1f}",
-                "C後": f"{c_count_after:.1f}",
-                "C変化": f"{c_count_change:+.0f}%",
-                "差分(T-C)": f"{t_count_change - c_count_change:+.0f}pt",
+                "T前": f"{t_count_before_dash:.1f}",
+                "T後": f"{t_count_after_dash:.1f}",
+                "T変化": f"{t_count_change_dash:+.0f}%",
+                "C前": f"{c_count_before_dash:.1f}",
+                "C後": f"{c_count_after_dash:.1f}",
+                "C変化": f"{c_count_change_dash:+.0f}%",
+                "差分(T-C)": f"{t_count_change_dash - c_count_change_dash:+.0f}pt",
                 "p値": "-",
             },
             {
                 "指標": "📈 投稿頻度(/日)",
-                "T前": f"{t_rate_before:.3f}",
-                "T後": f"{t_rate_after:.3f}",
-                "T変化": f"{t_rate_change:+.0f}%",
-                "C前": f"{c_rate_before:.3f}",
-                "C後": f"{c_rate_after:.3f}",
-                "C変化": f"{c_rate_change:+.0f}%",
-                "差分(T-C)": f"{t_rate_change - c_rate_change:+.0f}pt",
-                "p値": f"{p_rate:.4f}" if p_rate >= 0.0001 else "<0.0001",
+                "T前": f"{t_rate_before_dash:.3f}",
+                "T後": f"{t_rate_after_dash:.3f}",
+                "T変化": f"{t_rate_change_dash:+.0f}%",
+                "C前": f"{c_rate_before_dash:.3f}",
+                "C後": f"{c_rate_after_dash:.3f}",
+                "C変化": f"{c_rate_change_dash:+.0f}%",
+                "差分(T-C)": f"{t_rate_change_dash - c_rate_change_dash:+.0f}pt",
+                "p値": f"{p_rate_dash:.4f}" if p_rate_dash >= 0.0001 else "<0.0001",
             },
         ]
 
@@ -2299,7 +2418,7 @@ def _(df_user_analysis_filtered, mo, pd):
         ])
 
     dashboard_result
-    return (df_dashboard,)
+    return
 
 
 @app.cell
@@ -2407,23 +2526,23 @@ def _(df_engagement, df_sentiment, df_user_analysis_filtered, mo, pd):
         p_eng_final = 1.0
 
         if not df_engagement.empty:
-            df_eng_f = df_engagement[
+            df_eng_final = df_engagement[
                 (df_engagement["posts_before"] >= 1) & (df_engagement["posts_after"] >= 1)
             ]
-            t_eng_df = df_eng_f[df_eng_f["group"] == "Treatment"]
-            c_eng_df = df_eng_f[df_eng_f["group"] == "Control"]
+            t_eng_df_final = df_eng_final[df_eng_final["group"] == "Treatment"]
+            c_eng_df_final = df_eng_final[df_eng_final["group"] == "Control"]
 
-            if len(t_eng_df) > 0 and len(c_eng_df) > 0:
-                t_eng_b = t_eng_df["like_before"].astype(float).mean()
-                t_eng_a = t_eng_df["like_after"].astype(float).mean()
-                c_eng_b = c_eng_df["like_before"].astype(float).mean()
-                c_eng_a = c_eng_df["like_after"].astype(float).mean()
+            if len(t_eng_df_final) > 0 and len(c_eng_df_final) > 0:
+                t_eng_b = t_eng_df_final["like_before"].astype(float).mean()
+                t_eng_a = t_eng_df_final["like_after"].astype(float).mean()
+                c_eng_b = c_eng_df_final["like_before"].astype(float).mean()
+                c_eng_a = c_eng_df_final["like_after"].astype(float).mean()
                 t_eng_chg = (t_eng_a - t_eng_b) / t_eng_b * 100 if t_eng_b > 0 else 0
                 c_eng_chg = (c_eng_a - c_eng_b) / c_eng_b * 100 if c_eng_b > 0 else 0
 
                 _, p_eng_final = stats_final.ttest_ind(
-                    (t_eng_df["like_after"].astype(float) - t_eng_df["like_before"].astype(float)).dropna(),
-                    (c_eng_df["like_after"].astype(float) - c_eng_df["like_before"].astype(float)).dropna(),
+                    (t_eng_df_final["like_after"].astype(float) - t_eng_df_final["like_before"].astype(float)).dropna(),
+                    (c_eng_df_final["like_after"].astype(float) - c_eng_df_final["like_before"].astype(float)).dropna(),
                     equal_var=False
                 )
 
@@ -2567,21 +2686,27 @@ def _(df_user_analysis_filtered, mo):
     else:
         # エクスポート用DataFrame
         export_df = df_user_analysis_filtered.copy()
-        export_df.columns = [
-            "アカウントID",
-            "グループ",
-            "基準日",
-            "主なアイドル",
-            "投稿数（前）",
-            "投稿数（後）",
-            "変化量",
-            "日数（前）",
-            "日数（後）",
-            "1日あたり投稿数（前）",
-            "1日あたり投稿数（後）",
-            "1日あたり変化量",
-            "比率（後/前）",
-        ]
+
+        # 元のカラム名と日本語名のマッピング
+        column_mapping = {
+            "account_id": "アカウントID",
+            "group": "グループ",
+            "baseline_date": "基準日",
+            "main_idol": "主なアイドル",
+            "count_before": "投稿数（前）",
+            "count_after": "投稿数（後）",
+            "change": "変化量",
+            "days_before": "日数（前）",
+            "days_after": "日数（後）",
+            "rate_before": "1日あたり投稿数（前）",
+            "rate_after": "1日あたり投稿数（後）",
+            "rate_change": "1日あたり変化量",
+            "ratio": "比率（後/前）",
+            "royalty": "ロイヤリティ",
+        }
+
+        # 存在するカラムのみをリネーム
+        export_df = export_df.rename(columns=column_mapping)
 
         csv_data = export_df.to_csv(index=False)
 
@@ -2592,6 +2717,162 @@ def _(df_user_analysis_filtered, mo):
         )
 
     download_btn
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""
+    ---
+    ## 📊 HTMLレポート出力
+
+    Notebook LLM連携用に、分析結果をHTMLファイルとして出力できます。
+    """)
+    return
+
+
+@app.cell
+def _(df_engagement, df_sentiment, df_user_analysis_filtered, mo, pd):
+    """HTMLレポート生成"""
+    from datetime import datetime as dt_report
+
+    if df_user_analysis_filtered.empty:
+        html_download = mo.md("（レポート生成に必要なデータがありません）")
+    else:
+        # 統計サマリーの計算
+        treatment_df_html = df_user_analysis_filtered[df_user_analysis_filtered["group"] == "Treatment"]
+        control_df_html = df_user_analysis_filtered[df_user_analysis_filtered["group"] == "Control"]
+
+        t_count_before_html = treatment_df_html["count_before"].astype(float).mean()
+        t_count_after_html = treatment_df_html["count_after"].astype(float).mean()
+        c_count_before_html = control_df_html["count_before"].astype(float).mean()
+        c_count_after_html = control_df_html["count_after"].astype(float).mean()
+
+        t_rate_before_html = treatment_df_html["rate_before"].astype(float).mean()
+        t_rate_after_html = treatment_df_html["rate_after"].astype(float).mean()
+        c_rate_before_html = control_df_html["rate_before"].astype(float).mean()
+        c_rate_after_html = control_df_html["rate_after"].astype(float).mean()
+
+        # センチメント統計
+        sentiment_summary_html = ""
+        if not df_sentiment.empty and "positivity" in df_sentiment.columns:
+            # NA値を除外して計算
+            t_pos_before_html = df_sentiment[(df_sentiment["group"] == "Treatment") & (df_sentiment["period"] == "before")]["positivity"].dropna().astype(float).mean()
+            t_pos_after_html = df_sentiment[(df_sentiment["group"] == "Treatment") & (df_sentiment["period"] == "after")]["positivity"].dropna().astype(float).mean()
+            c_pos_before_html = df_sentiment[(df_sentiment["group"] == "Control") & (df_sentiment["period"] == "before")]["positivity"].dropna().astype(float).mean()
+            c_pos_after_html = df_sentiment[(df_sentiment["group"] == "Control") & (df_sentiment["period"] == "after")]["positivity"].dropna().astype(float).mean()
+        
+            # NaNチェック
+            if not (pd.isna(t_pos_before_html) or pd.isna(t_pos_after_html) or pd.isna(c_pos_before_html) or pd.isna(c_pos_after_html)):
+                sentiment_summary_html = f"""
+                <h3>4. ポジティブ度（0-5スケール）</h3>
+                <table>
+                    <tr><th>グループ</th><th>前</th><th>後</th><th>変化</th></tr>
+                    <tr><td>Treatment（IRC参加）</td><td>{t_pos_before_html:.2f}</td><td>{t_pos_after_html:.2f}</td><td>{t_pos_after_html - t_pos_before_html:+.2f}</td></tr>
+                    <tr><td>Control（IRC非参加）</td><td>{c_pos_before_html:.2f}</td><td>{c_pos_after_html:.2f}</td><td>{c_pos_after_html - c_pos_before_html:+.2f}</td></tr>
+                </table>
+                """
+
+        # エンゲージメント統計
+        engagement_summary_html = ""
+        if not df_engagement.empty:
+            df_eng_html = df_engagement[(df_engagement["posts_before"] >= 1) & (df_engagement["posts_after"] >= 1)]
+            t_eng_html = df_eng_html[df_eng_html["group"] == "Treatment"]
+            c_eng_html = df_eng_html[df_eng_html["group"] == "Control"]
+            if len(t_eng_html) > 0 and len(c_eng_html) > 0:
+                t_like_b_html = t_eng_html["like_before"].dropna().astype(float).mean()
+                t_like_a_html = t_eng_html["like_after"].dropna().astype(float).mean()
+                c_like_b_html = c_eng_html["like_before"].dropna().astype(float).mean()
+                c_like_a_html = c_eng_html["like_after"].dropna().astype(float).mean()
+                engagement_summary_html = f"""
+                <h3>3. エンゲージメント（平均いいね数/投稿）</h3>
+                <table>
+                    <tr><th>グループ</th><th>前</th><th>後</th><th>変化率</th></tr>
+                    <tr><td>Treatment（IRC参加）</td><td>{t_like_b_html:.1f}</td><td>{t_like_a_html:.1f}</td><td>{(t_like_a_html/t_like_b_html-1)*100 if t_like_b_html > 0 else 0:+.1f}%</td></tr>
+                    <tr><td>Control（IRC非参加）</td><td>{c_like_b_html:.1f}</td><td>{c_like_a_html:.1f}</td><td>{(c_like_a_html/c_like_b_html-1)*100 if c_like_b_html > 0 else 0:+.1f}%</td></tr>
+                </table>
+                """
+
+        html_content = f"""<!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IRCチャレンジ効果分析レポート</title>
+        <style>
+            body {{ font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; margin: 40px; line-height: 1.6; }}
+            h1 {{ color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }}
+            h2 {{ color: #34495e; margin-top: 30px; }}
+            h3 {{ color: #7f8c8d; }}
+            table {{ border-collapse: collapse; width: 100%; margin: 20px 0; }}
+            th, td {{ border: 1px solid #ddd; padding: 12px; text-align: left; }}
+            th {{ background-color: #3498db; color: white; }}
+            tr:nth-child(even) {{ background-color: #f9f9f9; }}
+            .highlight {{ background-color: #e8f6ff; font-weight: bold; }}
+            .positive {{ color: #27ae60; }}
+            .negative {{ color: #e74c3c; }}
+            .summary-box {{ background: #f8f9fa; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0; }}
+            .key-finding {{ background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }}
+        </style>
+    </head>
+    <body>
+        <h1>🔬 IRCチャレンジ効果分析レポート</h1>
+        <p>生成日時: {dt_report.now().strftime('%Y年%m月%d日 %H:%M')}</p>
+
+        <div class="summary-box">
+            <h2>📋 分析概要</h2>
+            <ul>
+                <li><strong>Treatment群（IRC参加者）</strong>: {len(treatment_df_html):,}名</li>
+                <li><strong>Control群（IRC非参加者）</strong>: {len(control_df_html):,}名</li>
+                <li><strong>分析対象</strong>: 前後両方に投稿があるユーザー</li>
+            </ul>
+        </div>
+
+        <h2>📊 主要指標の比較</h2>
+
+        <h3>1. 投稿数（平均）</h3>
+        <table>
+            <tr><th>グループ</th><th>前</th><th>後</th><th>変化量</th></tr>
+            <tr><td>Treatment（IRC参加）</td><td>{t_count_before_html:.1f}</td><td>{t_count_after_html:.1f}</td><td class="{'positive' if t_count_after_html - t_count_before_html > 0 else 'negative'}">{t_count_after_html - t_count_before_html:+.1f}</td></tr>
+            <tr><td>Control（IRC非参加）</td><td>{c_count_before_html:.1f}</td><td>{c_count_after_html:.1f}</td><td class="{'positive' if c_count_after_html - c_count_before_html > 0 else 'negative'}">{c_count_after_html - c_count_before_html:+.1f}</td></tr>
+        </table>
+
+        <h3>2. 投稿頻度（1日あたり平均投稿数）</h3>
+        <table>
+            <tr><th>グループ</th><th>前</th><th>後</th><th>変化率</th></tr>
+            <tr><td>Treatment（IRC参加）</td><td>{t_rate_before_html:.4f}</td><td>{t_rate_after_html:.4f}</td><td class="{'positive' if t_rate_after_html > t_rate_before_html else 'negative'}">{(t_rate_after_html/t_rate_before_html-1)*100 if t_rate_before_html > 0 else 0:+.1f}%</td></tr>
+            <tr><td>Control（IRC非参加）</td><td>{c_rate_before_html:.4f}</td><td>{c_rate_after_html:.4f}</td><td class="{'positive' if c_rate_after_html > c_rate_before_html else 'negative'}">{(c_rate_after_html/c_rate_before_html-1)*100 if c_rate_before_html > 0 else 0:+.1f}%</td></tr>
+        </table>
+
+        {engagement_summary_html}
+
+        {sentiment_summary_html}
+
+        <div class="key-finding">
+            <h2>💡 主要な発見</h2>
+            <ul>
+                <li>Treatment群（IRC参加者）の投稿数変化: <strong class="{'positive' if t_count_after_html - t_count_before_html > c_count_after_html - c_count_before_html else 'negative'}">{t_count_after_html - t_count_before_html:+.1f}</strong> vs Control群: <strong>{c_count_after_html - c_count_before_html:+.1f}</strong></li>
+                <li>Treatment群の投稿頻度変化率: <strong class="{'positive' if t_rate_after_html > t_rate_before_html else 'negative'}">{(t_rate_after_html/t_rate_before_html-1)*100 if t_rate_before_html > 0 else 0:+.1f}%</strong></li>
+            </ul>
+        </div>
+
+        <h2>⚠️ 注意事項</h2>
+        <ul>
+            <li>この分析は相関関係を示すものであり、因果関係を証明するものではありません。</li>
+            <li>セルフセレクションバイアスの可能性があります（IRC参加者はもともと活発な可能性）。</li>
+            <li>推奨される追加分析: 傾向スコアマッチング、差分の差分法（DiD）</li>
+        </ul>
+
+    </body>
+    </html>"""
+
+        html_download = mo.download(
+            data=html_content.encode("utf-8"),
+            filename="irc_impact_analysis_report.html",
+            label="📥 HTMLレポートダウンロード（Notebook LLM連携用）",
+        )
+
+    html_download
     return
 
 
@@ -2624,11 +2905,6 @@ def _(mo):
     - 時系列分析（Event Study）
     - 差分の差分法（Difference-in-Differences）
     """)
-    return
-
-
-@app.cell
-def _():
     return
 
 
