@@ -807,5 +807,123 @@ def _(df_user_overlap, mo):
     return
 
 
+@app.cell
+def _(mo):
+    mo.md("## 6. ユーザー単位のリスト→CSV紐づけ")
+    return
+
+
+@app.cell
+def _(mo):
+    user_link_button = mo.ui.run_button(label="ユーザー単位の紐づけを実行")
+    user_link_button
+    return (user_link_button,)
+
+
+@app.cell
+def _(
+    companylist_creator_col,
+    companylist_id_col,
+    csv_link_company_col,
+    csv_link_log_col,
+    csv_log_id_col,
+    csv_log_user_col,
+    list_link_company_col,
+    list_link_list_col,
+    mo,
+    run_query,
+    schema,
+    user_link_button,
+):
+    df_user_link = None
+
+    if user_link_button.value:
+        if (
+            companylist_creator_col.value
+            and companylist_id_col.value
+            and list_link_company_col.value
+            and list_link_list_col.value
+            and csv_log_user_col.value
+            and csv_log_id_col.value
+            and csv_link_company_col.value
+            and csv_link_log_col.value
+        ):
+            user_link_sql = f"""
+            WITH list_user_companies AS (
+              SELECT
+                cl.{companylist_creator_col.value} AS user_id,
+                bcl.{list_link_company_col.value} AS company_id
+              FROM {schema}.COMPANYLIST cl
+              JOIN {schema}._BEEGLECOMPANYTOCOMPANYLIST bcl
+                ON bcl.{list_link_list_col.value} = cl.{companylist_id_col.value}
+              WHERE cl.{companylist_creator_col.value} IS NOT NULL
+                AND bcl.{list_link_company_col.value} IS NOT NULL
+              GROUP BY user_id, company_id
+            ),
+            csv_user_companies AS (
+              SELECT
+                dl.{csv_log_user_col.value} AS user_id,
+                bcdl.{csv_link_company_col.value} AS company_id
+              FROM {schema}.CSVDOWNLOADLOG dl
+              JOIN {schema}._BEEGLECOMPANYTOCSVDOWNLOADLOG bcdl
+                ON bcdl.{csv_link_log_col.value} = dl.{csv_log_id_col.value}
+              WHERE dl.{csv_log_user_col.value} IS NOT NULL
+                AND bcdl.{csv_link_company_col.value} IS NOT NULL
+              GROUP BY user_id, company_id
+            ),
+            list_counts AS (
+              SELECT user_id, COUNT(*) AS list_companies
+              FROM list_user_companies
+              GROUP BY user_id
+            ),
+            csv_counts AS (
+              SELECT user_id, COUNT(*) AS csv_companies
+              FROM csv_user_companies
+              GROUP BY user_id
+            ),
+            overlap_counts AS (
+              SELECT
+                l.user_id AS user_id,
+                COUNT(*) AS overlap_companies
+              FROM list_user_companies l
+              JOIN csv_user_companies c
+                ON l.user_id = c.user_id
+               AND l.company_id = c.company_id
+              GROUP BY l.user_id
+            )
+            SELECT
+              COALESCE(l.user_id, c.user_id) AS user_id,
+              COALESCE(l.list_companies, 0) AS list_companies,
+              COALESCE(c.csv_companies, 0) AS csv_companies,
+              COALESCE(o.overlap_companies, 0) AS overlap_companies,
+              IFF(COALESCE(l.list_companies, 0) = 0,
+                  0,
+                  COALESCE(o.overlap_companies, 0) / COALESCE(l.list_companies, 1)
+              ) AS overlap_ratio
+            FROM list_counts l
+            FULL OUTER JOIN csv_counts c
+              ON l.user_id = c.user_id
+            LEFT JOIN overlap_counts o
+              ON COALESCE(l.user_id, c.user_id) = o.user_id
+            ORDER BY overlap_ratio DESC, overlap_companies DESC
+            LIMIT 200
+            """
+            df_user_link = run_query(user_link_sql)
+        else:
+            mo.md("*列の選択後に実行してください*")
+
+    return (df_user_link,)
+
+
+@app.cell
+def _(df_user_link, mo):
+    mo.md("### ユーザー別のリスト→CSV重複率")
+    if df_user_link is not None and len(df_user_link) > 0:
+        mo.ui.table(df_user_link, pagination=True)
+    else:
+        mo.md("*データがありません*")
+    return
+
+
 if __name__ == "__main__":
     app.run()

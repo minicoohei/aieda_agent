@@ -1,0 +1,184 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity USERORGANIZATION {
+  * ORGID : string
+  COMPANYID : string
+  NAME : string
+}
+
+entity USERORGRELATION {
+  * ID : string
+  ORGID : string
+  USERID : string
+}
+
+entity BEEGLECOMPANY {
+  * ID : string
+  SHOGO : string
+  SHOGOFULL : string
+}
+
+entity FIRSTPARTYGROUP {
+  * ID : string
+}
+
+entity FIRSTPARTYVISITLOGS {
+  * ID : string
+  FIRSTPARTYGROUPID : string
+  VISITORCOMPANYID : string
+}
+
+entity FIRSTPARTYSCOREVISITOR {
+  * ID : string
+  FIRSTPARTYGROUPID : string
+  COMPANYID : string
+  PAGEREFERRERTYPE : string
+}
+
+entity COMPANYLIST {
+  * ID : string
+  USERID : string
+  CREATEDAT : timestamp
+}
+
+entity _BEEGLECOMPANYTOCOMPANYLIST {
+  * A : string
+  * B : string
+  CREATEDAT : timestamp
+}
+
+entity PEOPLELIST {
+  * ID : string
+  USERID : string
+  CREATEDAT : timestamp
+}
+
+entity KEYMAN {
+  * ID : string
+}
+
+entity _KEYMANTOPEOPLELIST {
+  * A : string
+  * B : string
+  CREATEDAT : timestamp
+}
+
+entity CSVDOWNLOADLOG {
+  * ID : string
+  USERID : string
+  CREATEDAT : timestamp
+}
+
+entity _BEEGLECOMPANYTOCSVDOWNLOADLOG {
+  * A : string
+  * B : string
+  CREATEDAT : timestamp
+}
+
+entity CSVDOWNLOADQUOTAUPDATELOG {
+  * ID : string
+  USERID : string
+  CREATEDAT : timestamp
+}
+
+entity LISTIMPORTLOG {
+  * ID : string
+  USERID : string
+  CREATEDAT : timestamp
+}
+
+entity MEMO {
+  * ID : string
+  CONTENT : string
+  COMPANYID : string
+  CREATEDAT : timestamp
+  UPDATEDAT : timestamp
+  REPRESENTATIVECHANGEDETAILS : string
+  ACTIVITYDATE : timestamp
+  ANYFLOWJOBID : string
+  USERORGRELATIONID : string
+  NEXTACTIVITYDATE : timestamp
+  NEXTCONTENT : string
+  PRIORITY : string
+  STATUSSHOID : string
+}
+
+entity INTENT_SCORE_BQ <<BQ>> {
+  * ORGID : string
+  INTENT_SCORE : number
+  UPDATEDAT : timestamp
+}
+
+entity GA_SF_INTENT_MART <<LOGICAL>> {
+  * ORGID : string
+  COMPANYID : string
+  INTENT_SCORE : number
+  DOWNLOAD_COUNT_30D : number
+  LIST_ADD_COUNT_30D : number
+  GA_USERS_30D : number
+}
+
+BEEGLECOMPANY ||--o{ USERORGANIZATION : COMPANYID
+USERORGANIZATION ||--o{ USERORGRELATION : ORGID
+
+FIRSTPARTYGROUP ||--o{ FIRSTPARTYVISITLOGS : FIRSTPARTYGROUPID
+BEEGLECOMPANY ||--o{ FIRSTPARTYVISITLOGS : VISITORCOMPANYID
+
+FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCOREVISITOR : FIRSTPARTYGROUPID
+USERORGANIZATION ||--o{ FIRSTPARTYSCOREVISITOR : COMPANYID
+
+COMPANYLIST ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : LISTID(A)
+BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : COMPANYID(B)
+
+PEOPLELIST ||--o{ _KEYMANTOPEOPLELIST : LISTID(A)
+KEYMAN ||--o{ _KEYMANTOPEOPLELIST : KEYMANID(B)
+
+CSVDOWNLOADLOG ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : LOGID(A)
+BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : COMPANYID(B)
+
+USERORGANIZATION ||--o{ LISTIMPORTLOG : USERID
+COMPANYLIST .. LISTIMPORTLOG : import_source
+
+USERORGRELATION ||--o{ MEMO : USERORGRELATIONID
+BEEGLECOMPANY .. MEMO : company_target
+USERORGRELATION .. MEMO : from_user_id
+
+USERORGANIZATION ||--o{ GA_SF_INTENT_MART : ORGID
+BEEGLECOMPANY ||--o{ GA_SF_INTENT_MART : COMPANYID
+INTENT_SCORE_BQ .. GA_SF_INTENT_MART : intent_score_source
+
+note right of FIRSTPARTYSCOREVISITOR
+  COMPANYID refers to user org id (ORGID)
+end note
+
+note right of _BEEGLECOMPANYTOCOMPANYLIST
+  A/B columns are link keys
+end note
+
+note right of _KEYMANTOPEOPLELIST
+  A/B columns are link keys
+end note
+
+note right of _BEEGLECOMPANYTOCSVDOWNLOADLOG
+  A/B columns are link keys
+end note
+
+note right of MEMO
+  From(UserID) -> To(CompanyID) is a hypothesis
+end note
+
+note right of LISTIMPORTLOG
+  Candidate table name for list import events
+end note
+
+note right of INTENT_SCORE_BQ
+  BigQuery production_infobox (candidate table)
+end note
+
+note right of GA_SF_INTENT_MART
+  Logical mart (GA + Snowflake + BigQuery)
+end note
+
+@enduml

@@ -1,0 +1,385 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.8"
+  },
+  "cells": [
+    {
+      "id": "MJUe",
+      "code_hash": "018f9c0952665fdfc4003ebd441a72aa",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"memo\">MEMO \u5168\u91cf\u5206\u6790</h1>\n<span class=\"paragraph\">Snowflake\u306e <code>MEMO</code> \u30c6\u30fc\u30d6\u30eb\u3092\u5168\u91cf\u3067\u78ba\u8a8d\u3057\u3001<strong>\u30d1\u30fc\u30b9\u53ef\u80fd\u6027</strong>\u3068\n<strong>\u30a2\u30af\u30b7\u30e7\u30f3\u8a18\u9332\u306e\u50be\u5411</strong>\u3092\u628a\u63e1\u3059\u308b\u305f\u3081\u306e\u30ce\u30fc\u30c8\u30d6\u30c3\u30af\u3067\u3059\u3002</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "152648b8e12001356c77ef591a3864b5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"1-memo\">1. MEMO \u57fa\u672c\u7d71\u8a08</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "90a224da64506925e97a3745c640123e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"2\">2. \u30a2\u30af\u30b7\u30e7\u30f3\u30ad\u30fc\u30ef\u30fc\u30c9\u51fa\u73fe\u7387</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "2c4ee51f1bdc6eb6bc514cf8a8425205",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"3\">3. \u30b5\u30f3\u30d7\u30eb\u78ba\u8a8d</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "9b2e82d860e14bcc9fe49cabcde228c5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"4\">4. \u30d1\u30fc\u30b9\u53ef\u80fd\u6027\u30b9\u30b3\u30a2</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "979046496e69a2e69ac6062bdbef32a8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"5-llm\">5. LLM\u306b\u3088\u308b\u30a2\u30af\u30b7\u30e7\u30f3\u5206\u985e\uff08\u4efb\u610f\uff09</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "03db4bc2309bc028a7d14d8ff47661db",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "faee09bd030f3eb64bf26477e9eda4cb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "eb91d79b16bbbdad3400e4d12084e71a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "82fae33ba716e0cabce34ca471d9f769",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "3a54036a975fb471330aedc546a6f078",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "b40cf3ecde7155141cd9bf8e9e98be18",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='BYtC-0' random-id='fd395eba-7992-06cd-63fc-4f31168919b8'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;TOTAL&#92;&quot;:188120,&#92;&quot;NULL_COUNT&#92;&quot;:42664,&#92;&quot;SHORT_COUNT&#92;&quot;:68421,&#92;&quot;VALID_COUNT&#92;&quot;:119699}]&quot;' data-total-rows='1' data-total-columns='4' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='1' data-field-types='[[&quot;TOTAL&quot;,[&quot;integer&quot;,&quot;int32&quot;]],[&quot;NULL_COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;SHORT_COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;VALID_COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "2901aec2388500420471e08dc9d38e62",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "92c1756a6c6883227d7f998ececd826a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Kclp-0' random-id='7965ae66-ceee-5917-3444-92bb2db911b7'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;LENGTH_BUCKET&#92;&quot;:&#92;&quot;0-9&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:68421},{&#92;&quot;_marimo_row_id&#92;&quot;:1,&#92;&quot;LENGTH_BUCKET&#92;&quot;:&#92;&quot;10-49&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:65214},{&#92;&quot;_marimo_row_id&#92;&quot;:2,&#92;&quot;LENGTH_BUCKET&#92;&quot;:&#92;&quot;100-499&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:15930},{&#92;&quot;_marimo_row_id&#92;&quot;:3,&#92;&quot;LENGTH_BUCKET&#92;&quot;:&#92;&quot;50-99&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:37927},{&#92;&quot;_marimo_row_id&#92;&quot;:4,&#92;&quot;LENGTH_BUCKET&#92;&quot;:&#92;&quot;500+&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:628}]&quot;' data-total-rows='5' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='5' data-field-types='[[&quot;LENGTH_BUCKET&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "741c4e0ecdb88b2e0a1792505bfa0fb9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "1ac88efc39cc461649631f869c3bdf5f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Hstk-0' random-id='58a67c52-280b-f99a-e118-062f76753421'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-05-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:219},{&#92;&quot;_marimo_row_id&#92;&quot;:1,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-06-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:234},{&#92;&quot;_marimo_row_id&#92;&quot;:2,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-07-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:2336},{&#92;&quot;_marimo_row_id&#92;&quot;:3,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-08-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:2111},{&#92;&quot;_marimo_row_id&#92;&quot;:4,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-09-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:2441},{&#92;&quot;_marimo_row_id&#92;&quot;:5,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-10-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:4971},{&#92;&quot;_marimo_row_id&#92;&quot;:6,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-11-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:4185},{&#92;&quot;_marimo_row_id&#92;&quot;:7,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2024-12-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:4087},{&#92;&quot;_marimo_row_id&#92;&quot;:8,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2025-01-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:3754},{&#92;&quot;_marimo_row_id&#92;&quot;:9,&#92;&quot;MONTH&#92;&quot;:&#92;&quot;2025-02-01T00:00:00.000&#92;&quot;,&#92;&quot;COUNT&#92;&quot;:4399}]&quot;' data-total-rows='22' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;MONTH&quot;,[&quot;datetime&quot;,&quot;datetime64[ns]&quot;]],[&quot;COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "13b295fee74b6f928c5b5c13d03060ea",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "6c35176de5b25481a1cceffedde87bcc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='iLit-0' random-id='e42d7223-9525-d130-e69b-24e146462a86'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Sun&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:0,&#92;&quot;COUNT&#92;&quot;:1708},{&#92;&quot;_marimo_row_id&#92;&quot;:1,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Mon&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:1,&#92;&quot;COUNT&#92;&quot;:29382},{&#92;&quot;_marimo_row_id&#92;&quot;:2,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Tue&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:2,&#92;&quot;COUNT&#92;&quot;:33228},{&#92;&quot;_marimo_row_id&#92;&quot;:3,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Wed&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:3,&#92;&quot;COUNT&#92;&quot;:54177},{&#92;&quot;_marimo_row_id&#92;&quot;:4,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Thu&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:4,&#92;&quot;COUNT&#92;&quot;:34671},{&#92;&quot;_marimo_row_id&#92;&quot;:5,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Fri&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:5,&#92;&quot;COUNT&#92;&quot;:34195},{&#92;&quot;_marimo_row_id&#92;&quot;:6,&#92;&quot;WEEKDAY&#92;&quot;:&#92;&quot;Sat&#92;&quot;,&#92;&quot;WEEKDAY_NUM&#92;&quot;:6,&#92;&quot;COUNT&#92;&quot;:759}]&quot;' data-total-rows='7' data-total-columns='3' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='7' data-field-types='[[&quot;WEEKDAY&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;WEEKDAY_NUM&quot;,[&quot;integer&quot;,&quot;int8&quot;]],[&quot;COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "4f9fd3adf9c2f55051430989f7b2e6c9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "9f6bd543a952fa03e0c8e3b67de792e8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='qnkX-0' random-id='6c31016c-bfd2-beee-e063-c2f013ca109d'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;PHONE&#92;&quot;:33200,&#92;&quot;EMAIL&#92;&quot;:4135,&#92;&quot;VISIT&#92;&quot;:358,&#92;&quot;MEETING&#92;&quot;:2972,&#92;&quot;DOCUMENT&#92;&quot;:5429}]&quot;' data-total-rows='1' data-total-columns='5' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='1' data-field-types='[[&quot;PHONE&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;EMAIL&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;VISIT&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;MEETING&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;DOCUMENT&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "5fe5358aa632714ba3cff791729c4b5b",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "internal",
+          "evalue": "An internal error occurred: 908302a5-0325-49d4-883b-2b4c3c938198",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "d14ffbb289e8419b8b1989cba05418c9",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "internal",
+          "evalue": "An internal error occurred: cebc3230-4dd1-4dc3-a683-692ed1ffa058",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "0966feb842b18b1ccd73efcf84f68244",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "internal",
+          "evalue": "An internal error occurred: 4a2f511f-731f-4e39-b55e-7733010d7af6",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "a93a851412abf958a87e4c53ed9a75c3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "7182f5b64887f5cccb690f6fe26bba76",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ZBYS-0' random-id='e24d5376-96bc-4542-f1f7-b958c3e0fec0'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;_marimo_row_id&#92;&quot;:0,&#92;&quot;TOTAL&#92;&quot;:188120,&#92;&quot;HIGH_COUNT&#92;&quot;:25726,&#92;&quot;MEDIUM_COUNT&#92;&quot;:28759,&#92;&quot;LOW_COUNT&#92;&quot;:133635}]&quot;' data-total-rows='1' data-total-columns='4' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='1' data-field-types='[[&quot;TOTAL&quot;,[&quot;integer&quot;,&quot;int32&quot;]],[&quot;HIGH_COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;MEDIUM_COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;LOW_COUNT&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-selection='&quot;multi&quot;' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='false' data-row-headers='[]' data-has-stable-row-id='true' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "0a5040310c2b21e8f5703c83ff78e8b5",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "internal",
+          "evalue": "An internal error occurred: 0485b7b6-2b17-4284-bbaf-ecee83abf894",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "62c08ae9bc323b9b3ec51e587d6d07f7",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "internal",
+          "evalue": "An internal error occurred: 35b91e6f-c0e7-4a36-9a22-e038a3df0cbc",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "9e438cd80ec75149e1f2c6c8e7c2b078",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "internal",
+          "evalue": "An internal error occurred: c64b55b9-1e74-493c-98fc-c05d02a3fe2a",
+          "traceback": []
+        }
+      ],
+      "console": []
+    }
+  ]
+}
