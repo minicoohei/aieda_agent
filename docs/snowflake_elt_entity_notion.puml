@@ -1,182 +1,349 @@
 @startuml
 hide circle
 skinparam linetype ortho
+left to right direction
 
+' ============================================
+' ユーザー・組織系
+' ============================================
 entity USERORGANIZATION {
-  * ORGID : string
-  COMPANYID : string
+  * ORGID : string <<PK>>
+  --
+  COMPANYID : string <<FK>>
   NAME : string
+  --
+  infoboxユーザー企業
 }
 
 entity USERORGRELATION {
-  * ID : string
-  ORGID : string
-  USERID : string
+  * ID : string <<PK>> <<UUID>>
+  --
+  USERID : string <<FK>>
+  ORGANIZATIONID : string <<FK>>
+  --
+  ログインユーザーと組織の組み合わせ
+  ID: UUID主キー（意味なし）
+  USERID: ログインユーザーID
+  ORGANIZATIONID: 組織ID
+}
+
+entity USER {
+  * ID : string <<PK>>
+  --
+  NAME : string
+  --
+  infoboxログインユーザー
 }
 
 entity BEEGLECOMPANY {
-  * ID : string
+  * ID : string <<PK>>
+  --
   SHOGO : string
   SHOGOFULL : string
+  --
+  企業マスタ
 }
+
+' ============================================
+' 1stパーティ系
+' ============================================
 entity FIRSTPARTYGROUP {
-  * ID : string
+  * ID : string <<PK>>
+  --
+  1stパーティタグ埋込サイト
 }
 
 entity FIRSTPARTYVISITLOGS {
-  * ID : string
-  FIRSTPARTYGROUPID : string
-  VISITORCOMPANYID : string
+  * ID : string <<PK>>
+  --
+  FIRSTPARTYGROUPID : string <<FK>>
+  VISITORCOMPANYID : string <<FK>>
+  --
+  サイト訪問ログ
+  VISITORCOMPANYID:
+    訪問者のBeegleCompany ID
 }
 
 entity FIRSTPARTYSCOREVISITOR {
-  * ID : string
-  FIRSTPARTYGROUPID : string
-  COMPANYID : string
+  * ID : string <<PK>>
+  --
+  FIRSTPARTYGROUPID : string <<FK>>
+  COMPANYID : string <<FK>>
   PAGEREFERRERTYPE : string
+  --
+  1stパーティスコア訪問者
+  COMPANYID: ユーザー企業ID(ORGID)
+  PAGEREFERRERTYPE: 流入経路
 }
 
+' ============================================
+' インテントスコア系
+' ============================================
+entity FIRSTPARTYSCORECHANGE {
+  * ID : string <<PK>>
+  --
+  FIRSTPARTYGROUPID : string <<UK>>
+  COMPANYID : string <<UK>>
+  SCORE : number
+  --
+  1stパーティースコア
+  複合UK:
+    (FIRSTPARTYGROUPID, COMPANYID)
+}
+
+entity FIRSTPARTYSCORECHANGEHISTORY {
+  * ID : string <<PK>>
+  --
+  FIRSTPARTYGROUPID : string <<UK>>
+  COMPANYID : string <<UK>>
+  INTENTCHANGEDATE : date <<UK>>
+  SCORE : number
+  --
+  1stパーティースコア履歴
+  複合UK:
+    (FIRSTPARTYGROUPID,
+     COMPANYID,
+     INTENTCHANGEDATE)
+}
+
+entity INTENTSCORECHANGE {
+  * ID : string <<PK>>
+  --
+  ORIGINALPRODUCTCATEGORYID : string <<UK>>
+  COMPANYID : string <<UK>>
+  SCORE : number
+  --
+  2ndパーティースコア
+  複合UK:
+    (ORIGINALPRODUCTCATEGORYID,
+     COMPANYID)
+}
+
+entity INTENTSCORECHANGEHISTORY {
+  * ID : string <<PK>>
+  --
+  ORIGINALPRODUCTCATEGORYID : string <<UK>>
+  COMPANYID : string <<UK>>
+  INTENTCHANGEDATE : date <<UK>>
+  SCORE : number
+  --
+  2ndパーティースコア履歴
+  複合UK:
+    (ORIGINALPRODUCTCATEGORYID,
+     COMPANYID,
+     INTENTCHANGEDATE)
+}
+
+' ============================================
+' リスト系
+' ============================================
 entity COMPANYLIST {
-  * ID : string
-  USERID : string
+  * ID : string <<PK>>
+  --
+  USERORGRELATIONID : string <<FK>>
   CREATEDAT : timestamp
+  --
+  企業リスト
+  企業検索/CSVインポートから作成
+  インポート履歴を残さない
 }
 
 entity _BEEGLECOMPANYTOCOMPANYLIST {
-  * A : string
-  * B : string
+  * A : string <<FK>>
+  * B : string <<FK>>
+  --
   CREATEDAT : timestamp
+  --
+  中間テーブル
+  A: company_id (BEEGLECOMPANY)
+  B: list_id (COMPANYLIST)
+  命名規則: 左側がA, 右側がB
 }
 
 entity PEOPLELIST {
-  * ID : string
-  USERID : string
+  * ID : string <<PK>>
+  --
+  USERORGRELATIONID : string <<FK>>
   CREATEDAT : timestamp
+  --
+  人物リスト
+  人物検索/CSVインポートから作成
+  履歴はLEADIMPORTEVENTに保管
 }
 
 entity KEYMAN {
-  * ID : string
+  * ID : string <<PK>>
+  --
+  キーマン（人物）マスタ
 }
 
 entity _KEYMANTOPEOPLELIST {
-  * A : string
-  * B : string
+  * A : string <<FK>>
+  * B : string <<FK>>
+  --
   CREATEDAT : timestamp
+  --
+  中間テーブル
+  A: keyman_id (KEYMAN)
+  B: list_id (PEOPLELIST)
+  命名規則: 左側がA, 右側がB
 }
 
-entity CSVDOWNLOADLOG {
-  * ID : string
-  USERID : string
+entity LEADIMPORTEVENT {
+  * ID : string <<PK>>
+  --
+  USERORGRELATIONID : string <<FK>>
   CREATEDAT : timestamp
+  --
+  人物リストのインポート履歴
+  企業リストは履歴を残さない
+}
+
+' ============================================
+' CSVダウンロード系
+' ============================================
+entity CSVDOWNLOADLOG {
+  * ID : string <<PK>>
+  --
+  USERORGRELATIONID : string <<FK>>
+  CREATEDAT : timestamp
+  --
+  CSVダウンロード履歴
+  USERIDではなく
+  USERORGRELATIONIDを使用
 }
 
 entity _BEEGLECOMPANYTOCSVDOWNLOADLOG {
-  * A : string
-  * B : string
+  * A : string <<FK>>
+  * B : string <<FK>>
+  --
   CREATEDAT : timestamp
+  --
+  中間テーブル
+  A: log_id (CSVDOWNLOADLOG)
+  B: company_id (BEEGLECOMPANY)
 }
 
 entity CSVDOWNLOADQUOTAUPDATELOG {
-  * ID : string
-  USERID : string
+  * ID : string <<PK>>
+  --
+  USERORGRELATIONID : string <<FK>>
   CREATEDAT : timestamp
+  --
+  クォータ更新ログ
 }
 
-entity LISTIMPORTLOG {
-  * ID : string
-  USERID : string
-  CREATEDAT : timestamp
-}
-
+' ============================================
+' 活動履歴（MEMO）系
+' ============================================
 entity MEMO {
-  * ID : string
+  * ID : string <<PK>>
+  --
   CONTENT : string
-  COMPANYID : string
+  COMPANYID : string <<FK>>
   CREATEDAT : timestamp
   UPDATEDAT : timestamp
   REPRESENTATIVECHANGEDETAILS : string
   ACTIVITYDATE : timestamp
   ANYFLOWJOBID : string
-  USERORGRELATIONID : string
+  USERORGRELATIONID : string <<FK>>
   NEXTACTIVITYDATE : timestamp
   NEXTCONTENT : string
-  PRIORITY : string
-  STATUSSHOID : string
+  PRIORITY : enum
+  STATUSSHOID : string <<FK>>
+  --
+  活動履歴
+  PRIORITY: A/B/C/NULL (優先度)
+  STATUSSHOID: MEMOSTATUSSHOへのFK
+  ユーザー判別:
+    MEMO→USERORGRELATION→USER
+  企業判別:
+    MEMO→BEEGLECOMPANY(COMPANYID)
 }
 
-entity INTENT_SCORE_BQ <<BQ>> {
-  * ORGID : string
-  INTENT_SCORE : number
-  UPDATEDAT : timestamp
+entity MEMOSTATUSSHO {
+  * ID : string <<PK>>
+  --
+  NAME : string
+  MEMOSTATUSDAIID : string <<FK>>
+  --
+  活動状況（詳細）
+  画面プルダウンの細文字部分
 }
 
+entity MEMOSTATUSDAI {
+  * ID : string <<PK>>
+  --
+  NAME : string
+  --
+  活動状況カテゴリ（大分類）
+  画面プルダウンの太文字部分
+  MEMOSTATUSSHOとN:1の関係
+}
+
+' ============================================
+' 論理マート（参考）
+' ============================================
 entity GA_SF_INTENT_MART <<LOGICAL>> {
   * ORGID : string
+  --
   COMPANYID : string
   INTENT_SCORE : number
   DOWNLOAD_COUNT_30D : number
   LIST_ADD_COUNT_30D : number
   GA_USERS_30D : number
+  --
+  論理マート
+  GA + Snowflake + BigQuery統合
 }
 
+' ============================================
+' リレーション
+' ============================================
+' ユーザー・組織
 BEEGLECOMPANY ||--o{ USERORGANIZATION : COMPANYID
-USERORGANIZATION ||--o{ USERORGRELATION : ORGID
+USERORGANIZATION ||--o{ USERORGRELATION : ORGANIZATIONID
+USER ||--o{ USERORGRELATION : USERID
 
+' 1stパーティ
 FIRSTPARTYGROUP ||--o{ FIRSTPARTYVISITLOGS : FIRSTPARTYGROUPID
 BEEGLECOMPANY ||--o{ FIRSTPARTYVISITLOGS : VISITORCOMPANYID
-
 FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCOREVISITOR : FIRSTPARTYGROUPID
 USERORGANIZATION ||--o{ FIRSTPARTYSCOREVISITOR : COMPANYID
-COMPANYLIST ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : LISTID(A)
-BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : COMPANYID(B)
 
-PEOPLELIST ||--o{ _KEYMANTOPEOPLELIST : LISTID(A)
-KEYMAN ||--o{ _KEYMANTOPEOPLELIST : KEYMANID(B)
+' インテントスコア
+FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCORECHANGE : FIRSTPARTYGROUPID
+BEEGLECOMPANY ||--o{ FIRSTPARTYSCORECHANGE : COMPANYID
+FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCORECHANGEHISTORY : FIRSTPARTYGROUPID
+BEEGLECOMPANY ||--o{ FIRSTPARTYSCORECHANGEHISTORY : COMPANYID
+BEEGLECOMPANY ||--o{ INTENTSCORECHANGE : COMPANYID
+BEEGLECOMPANY ||--o{ INTENTSCORECHANGEHISTORY : COMPANYID
 
-CSVDOWNLOADLOG ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : LOGID(A)
-BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : COMPANYID(B)
+' リスト
+USERORGRELATION ||--o{ COMPANYLIST : USERORGRELATIONID
+BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : A
+COMPANYLIST ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : B
 
-USERORGANIZATION ||--o{ LISTIMPORTLOG : USERID
-COMPANYLIST .. LISTIMPORTLOG : import_source
+USERORGRELATION ||--o{ PEOPLELIST : USERORGRELATIONID
+KEYMAN ||--o{ _KEYMANTOPEOPLELIST : A
+PEOPLELIST ||--o{ _KEYMANTOPEOPLELIST : B
 
+USERORGRELATION ||--o{ LEADIMPORTEVENT : USERORGRELATIONID
+
+' CSVダウンロード
+USERORGRELATION ||--o{ CSVDOWNLOADLOG : USERORGRELATIONID
+CSVDOWNLOADLOG ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : A
+BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : B
+USERORGRELATION ||--o{ CSVDOWNLOADQUOTAUPDATELOG : USERORGRELATIONID
+
+' MEMO
 USERORGRELATION ||--o{ MEMO : USERORGRELATIONID
-BEEGLECOMPANY .. MEMO : company_target
-USERORGRELATION .. MEMO : from_user_id
+BEEGLECOMPANY ||--o{ MEMO : COMPANYID
+MEMOSTATUSSHO ||--o{ MEMO : STATUSSHOID
+MEMOSTATUSDAI ||--o{ MEMOSTATUSSHO : MEMOSTATUSDAIID
 
+' 論理マート
 USERORGANIZATION ||--o{ GA_SF_INTENT_MART : ORGID
 BEEGLECOMPANY ||--o{ GA_SF_INTENT_MART : COMPANYID
-INTENT_SCORE_BQ .. GA_SF_INTENT_MART : intent_score_source
-
-note right of FIRSTPARTYSCOREVISITOR
-  COMPANYID refers to user org id (ORGID)
-end note
-
-note right of _BEEGLECOMPANYTOCOMPANYLIST
-  A/B columns are link keys
-end note
-
-note right of _KEYMANTOPEOPLELIST
-  A/B columns are link keys
-end note
-
-note right of _BEEGLECOMPANYTOCSVDOWNLOADLOG
-  A/B columns are link keys
-end note
-
-note right of MEMO
-  From(UserID) -> To(CompanyID) is a hypothesis
-end note
-
-note right of LISTIMPORTLOG
-  Candidate table name for list import events
-end note
-
-note right of INTENT_SCORE_BQ
-  BigQuery production_infobox (candidate table)
-end note
-
-note right of GA_SF_INTENT_MART
-  Logical mart (GA + Snowflake + BigQuery)
-end note
 
 @enduml
