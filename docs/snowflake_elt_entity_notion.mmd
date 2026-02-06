@@ -1,0 +1,392 @@
+%% ============================================
+%% InfoBox 統合ER図
+%% Snowflake (ETL_S3_TRANSALES_DB) + BigQuery (production_infobox)
+%% ============================================
+erDiagram
+
+  %% ============================================
+  %% ユーザー・組織系
+  %% ============================================
+  USERORGANIZATION {
+    string ORGID PK "ユーザー企業ID"
+    string COMPANYID FK "BeegleCompany FK"
+    string NAME
+  }
+
+  USERORGRELATION {
+    string ID PK "UUID"
+    string USERID FK
+    string ORGANIZATIONID FK
+  }
+
+  USER {
+    string ID PK
+    string NAME
+  }
+
+  BEEGLECOMPANY {
+    string ID PK
+    string COMPNO "法人番号"
+    string SHOGO "商号"
+    string SHOGOFULL "商号(フル)"
+  }
+
+  %% ============================================
+  %% 1stパーティ系 (Snowflake)
+  %% ============================================
+  FIRSTPARTYGROUP {
+    string ID PK "1stパーティタグ埋込サイト"
+  }
+
+  FIRSTPARTYVISITLOGS {
+    string ID PK
+    string FIRSTPARTYGROUPID FK
+    string VISITORCOMPANYID FK "訪問者BeegleCompany ID"
+  }
+
+  FIRSTPARTYSCOREVISITOR {
+    string ID PK
+    string FIRSTPARTYGROUPID FK
+    string COMPANYID FK "ユーザー企業ID(ORGID)"
+    string PAGEREFERRERTYPE "流入経路"
+  }
+
+  %% ============================================
+  %% インテントスコア系 (Snowflake)
+  %% ============================================
+  FIRSTPARTYSCORECHANGE {
+    string ID PK
+    string FIRSTPARTYGROUPID UK
+    string COMPANYID UK
+    number SCORE
+  }
+
+  FIRSTPARTYSCORECHANGEHISTORY {
+    string ID PK
+    string FIRSTPARTYGROUPID UK
+    string COMPANYID UK
+    date INTENTCHANGEDATE UK
+    number SCORE
+  }
+
+  INTENTSCORECHANGE {
+    string ID PK
+    string ORIGINALPRODUCTCATEGORYID UK
+    string COMPANYID UK
+    number SCORE
+  }
+
+  INTENTSCORECHANGEHISTORY {
+    string ID PK
+    string ORIGINALPRODUCTCATEGORYID UK
+    string COMPANYID UK
+    date INTENTCHANGEDATE UK
+    number SCORE
+  }
+
+  %% ============================================
+  %% リスト系
+  %% ============================================
+  COMPANYLIST {
+    string ID PK
+    string USERORGRELATIONID FK
+    timestamp CREATEDAT
+  }
+
+  _BEEGLECOMPANYTOCOMPANYLIST {
+    string A FK "company_id (BEEGLECOMPANY)"
+    string B FK "list_id (COMPANYLIST)"
+    timestamp CREATEDAT
+  }
+
+  PEOPLELIST {
+    string ID PK
+    string USERORGRELATIONID FK
+    timestamp CREATEDAT
+  }
+
+  KEYMAN {
+    string ID PK
+    string NAME
+    string FIRSTNAME
+    string LASTNAME
+    string POSITION
+    string BEEGLECOMPANYID FK
+    string JOBTYPEID FK
+    string POSITIONRANKID FK
+    number ISRETIRED
+  }
+
+  _KEYMANTOPEOPLELIST {
+    string A FK "keyman_id (KEYMAN)"
+    string B FK "list_id (PEOPLELIST)"
+    timestamp CREATEDAT
+  }
+
+  LEADIMPORTEVENT {
+    string ID PK
+    string CSVFILENAME
+    string CREATEDBYUSERORGRELATIONID FK "作成者UserOrgRelation"
+    timestamp CREATEDAT
+    number ISDELETEDALLLEADS
+    string NAME
+    string PEOPLELISTID FK "PeopleList FK"
+    date SNAPSHOT_DATE
+    timestamp LOAD_TIMESTAMP
+  }
+
+  %% ============================================
+  %% CRM系 (LEAD / NEGOTIATION)
+  %% ============================================
+  LEAD {
+    string ID PK
+    string COMPNO "法人番号"
+    string FIRSTNAME
+    string LASTNAME
+    string SHOGO "商号"
+    string DEPARTMENT "部署"
+    string POSITION "役職"
+    string EMAIL
+    string TEL
+    string MOBILE
+    string COMPANYID FK "BeegleCompany FK"
+    string PERSONID
+    string CREATEDBYLEADIMPORTEVENTID FK "LEADIMPORTEVENT FK"
+    string UPDATEDBYLEADIMPORTEVENTID FK "LEADIMPORTEVENT FK"
+    number HASCONTACT
+    timestamp CREATEDAT
+    timestamp UPDATEDAT
+    number DELETED
+    string JOBTYPEID
+    string ORGANIZATIONID FK
+    string LEADSOURCEID
+    date SNAPSHOT_DATE
+    timestamp LOAD_TIMESTAMP
+  }
+
+  NEGOTIATION {
+    string ID PK
+    string ORGANIZATIONID "orgID? 関連先不明"
+    timestamp CREATEDAT
+    timestamp UPDATEDAT
+    string COMPANYID FK
+    string COMPANYLISTICONTYPEID
+    string CRMNEGOTIATIONID
+    string CRMTYPE
+    timestamp CRMCREATEDAT
+    date SNAPSHOT_DATE
+    timestamp LOAD_TIMESTAMP
+  }
+
+  _LEADTOPEOPLELIST {
+    string A FK "lead_id (LEAD)"
+    string B FK "list_id (PEOPLELIST)"
+    date SNAPSHOT_DATE
+    timestamp LOAD_TIMESTAMP
+  }
+
+  %% ============================================
+  %% CSVダウンロード系
+  %% ============================================
+  CSVDOWNLOADLOG {
+    string ID PK
+    string USERORGRELATIONID FK
+    timestamp CREATEDAT
+  }
+
+  _BEEGLECOMPANYTOCSVDOWNLOADLOG {
+    string A FK "log_id (CSVDOWNLOADLOG)"
+    string B FK "company_id (BEEGLECOMPANY)"
+    timestamp CREATEDAT
+  }
+
+  CSVDOWNLOADQUOTAUPDATELOG {
+    string ID PK
+    string USERORGRELATIONID FK
+    timestamp CREATEDAT
+  }
+
+  %% ============================================
+  %% 活動履歴（MEMO）系
+  %% ============================================
+  MEMO {
+    string ID PK
+    string CONTENT
+    string COMPANYID FK
+    timestamp CREATEDAT
+    timestamp UPDATEDAT
+    string REPRESENTATIVECHANGEDETAILS
+    timestamp ACTIVITYDATE
+    string ANYFLOWJOBID
+    string USERORGRELATIONID FK
+    timestamp NEXTACTIVITYDATE
+    string NEXTCONTENT
+    enum PRIORITY "A/B/C/NULL"
+    string STATUSSHOID FK
+  }
+
+  MEMOSTATUSSHO {
+    string ID PK
+    string NAME "活動状況(詳細)"
+    string MEMOSTATUSDAIID FK
+  }
+
+  MEMOSTATUSDAI {
+    string ID PK
+    string NAME "活動状況(大分類)"
+  }
+
+  %% ============================================
+  %% 論理マート（参考）
+  %% ============================================
+  GA_SF_INTENT_MART {
+    string ORGID
+    string COMPANYID
+    number INTENT_SCORE
+    number DOWNLOAD_COUNT_30D
+    number LIST_ADD_COUNT_30D
+    number GA_USERS_30D
+  }
+
+  %% ============================================
+  %% BigQuery: 1stパーティ系 (production_infobox)
+  %% ============================================
+  BQ_master_first_party_group {
+    string client_id PK "顧客企業の法人番号"
+    string group_id PK "顧客サイトキー"
+    string group_name "サイト識別子"
+  }
+
+  BQ_first_party_score_company_all_history {
+    string first_party_corporate_id PK "顧客企業の法人番号"
+    string corporate_id "対象企業の法人番号"
+    number intent_level "3:High 2:Mid 1:Low"
+    date change_date PK "スコア変動日"
+  }
+
+  BQ_first_party_score_company_all_history_by_group {
+    string first_party_corporate_id PK "顧客企業の法人番号"
+    string group_id PK "顧客サイトキー"
+    string corporate_id "対象企業の法人番号"
+    number intent_level "3:High 2:Mid 1:Low"
+    date change_date PK "スコア変動日"
+  }
+
+  BQ_first_party_visitors_log {
+    string first_party_corporate_id PK "顧客企業の法人番号"
+    date view_date "アクセス日(JST)"
+    timestamp view_datetime PK "アクセス日時(JST)"
+    string corporate_id "対象企業の法人番号"
+    string page_referrer_type "流入経路"
+    string page_referrer_name "流入元"
+    string page_title "サイト名"
+    string page_location "サイトURL"
+  }
+
+  BQ_first_party_visitors_log_by_group {
+    string first_party_corporate_id PK "顧客企業の法人番号"
+    string group_id PK "顧客サイトキー"
+    date view_date "アクセス日(JST)"
+    timestamp view_datetime PK "アクセス日時(JST)"
+    string corporate_id "対象企業の法人番号"
+    string page_referrer_type "流入経路"
+    string page_referrer_name "流入元"
+    string page_title "サイト名"
+    string page_location "サイトURL"
+  }
+
+  %% ============================================
+  %% BigQuery: 2ndパーティ系 (production_infobox)
+  %% ============================================
+  BQ_master_original_product_category {
+    string original_category_id PK "主キー"
+    string original_category_name "インテントキーワード名"
+    string service_type "大カテゴリ名"
+    string category_main_name "小カテゴリ名"
+    string category_sub_name "サブカテゴリ名"
+  }
+
+  BQ_score_company_category_change_v3_all_history {
+    string corporate_id PK "企業の法人番号"
+    string original_category_id PK "インテントキーワードFK"
+    string original_category_name "インテントキーワード名"
+    number intent_level "3:High 2:Mid 1:Low"
+    date change_date PK "スコア変動日"
+  }
+
+  BQ_company_category_daily_v3 {
+    string corporate_id PK "企業の法人番号"
+    date view_date "アクセス日"
+    string original_category_id FK "インテントキーワードFK"
+    string original_category_name "インテントキーワード名"
+  }
+
+  %% ============================================
+  %% リレーション: ユーザー・組織
+  %% ============================================
+  BEEGLECOMPANY ||--o{ USERORGANIZATION : "COMPANYID"
+  USERORGANIZATION ||--o{ USERORGRELATION : "ORGANIZATIONID"
+  USER ||--o{ USERORGRELATION : "USERID"
+
+  %% リレーション: 1stパーティ (Snowflake)
+  FIRSTPARTYGROUP ||--o{ FIRSTPARTYVISITLOGS : "FIRSTPARTYGROUPID"
+  BEEGLECOMPANY ||--o{ FIRSTPARTYVISITLOGS : "VISITORCOMPANYID"
+  FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCOREVISITOR : "FIRSTPARTYGROUPID"
+  USERORGANIZATION ||--o{ FIRSTPARTYSCOREVISITOR : "COMPANYID"
+
+  %% リレーション: インテントスコア (Snowflake)
+  FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCORECHANGE : "FIRSTPARTYGROUPID"
+  BEEGLECOMPANY ||--o{ FIRSTPARTYSCORECHANGE : "COMPANYID"
+  FIRSTPARTYGROUP ||--o{ FIRSTPARTYSCORECHANGEHISTORY : "FIRSTPARTYGROUPID"
+  BEEGLECOMPANY ||--o{ FIRSTPARTYSCORECHANGEHISTORY : "COMPANYID"
+  BEEGLECOMPANY ||--o{ INTENTSCORECHANGE : "COMPANYID"
+  BEEGLECOMPANY ||--o{ INTENTSCORECHANGEHISTORY : "COMPANYID"
+
+  %% リレーション: リスト
+  USERORGRELATION ||--o{ COMPANYLIST : "USERORGRELATIONID"
+  BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : "A"
+  COMPANYLIST ||--o{ _BEEGLECOMPANYTOCOMPANYLIST : "B"
+
+  USERORGRELATION ||--o{ PEOPLELIST : "USERORGRELATIONID"
+  KEYMAN ||--o{ _KEYMANTOPEOPLELIST : "A"
+  PEOPLELIST ||--o{ _KEYMANTOPEOPLELIST : "B"
+
+  BEEGLECOMPANY ||--o{ KEYMAN : "BEEGLECOMPANYID"
+
+  %% リレーション: LEADIMPORTEVENT
+  USERORGRELATION ||--o{ LEADIMPORTEVENT : "CREATEDBYUSERORGRELATIONID"
+  PEOPLELIST ||--o{ LEADIMPORTEVENT : "PEOPLELISTID"
+
+  %% リレーション: CRM (LEAD / NEGOTIATION)
+  BEEGLECOMPANY ||--o{ LEAD : "COMPANYID"
+  LEADIMPORTEVENT ||--o{ LEAD : "CREATEDBYLEADIMPORTEVENTID"
+  LEADIMPORTEVENT ||--o{ LEAD : "UPDATEDBYLEADIMPORTEVENTID"
+  LEAD ||--o{ _LEADTOPEOPLELIST : "A"
+  PEOPLELIST ||--o{ _LEADTOPEOPLELIST : "B"
+  BEEGLECOMPANY ||--o{ NEGOTIATION : "COMPANYID"
+  %% NEGOTIATION.ORGANIZATIONID の関連先は不明
+
+  %% リレーション: CSVダウンロード
+  USERORGRELATION ||--o{ CSVDOWNLOADLOG : "USERORGRELATIONID"
+  CSVDOWNLOADLOG ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : "A"
+  BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : "B"
+  USERORGRELATION ||--o{ CSVDOWNLOADQUOTAUPDATELOG : "USERORGRELATIONID"
+
+  %% リレーション: MEMO
+  USERORGRELATION ||--o{ MEMO : "USERORGRELATIONID"
+  BEEGLECOMPANY ||--o{ MEMO : "COMPANYID"
+  MEMOSTATUSSHO ||--o{ MEMO : "STATUSSHOID"
+  MEMOSTATUSDAI ||--o{ MEMOSTATUSSHO : "MEMOSTATUSDAIID"
+
+  %% リレーション: 論理マート
+  USERORGANIZATION ||--o{ GA_SF_INTENT_MART : "ORGID"
+  BEEGLECOMPANY ||--o{ GA_SF_INTENT_MART : "COMPANYID"
+
+  %% リレーション: BigQuery 1stパーティ
+  %% BQ テーブルは corporate_id (法人番号) で BEEGLECOMPANY.COMPNO と結合可能
+  BQ_master_first_party_group ||--o{ BQ_first_party_score_company_all_history_by_group : "group_id"
+  BQ_master_first_party_group ||--o{ BQ_first_party_visitors_log_by_group : "group_id"
+
+  %% リレーション: BigQuery 2ndパーティ
+  BQ_master_original_product_category ||--o{ BQ_score_company_category_change_v3_all_history : "original_category_id"
+  BQ_master_original_product_category ||--o{ BQ_company_category_daily_v3 : "original_category_id"
