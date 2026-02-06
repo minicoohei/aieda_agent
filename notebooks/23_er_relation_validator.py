@@ -960,7 +960,7 @@ def _(BigQueryConnector, get_snowflake_connection, pd):
                     cur = conn.cursor()
                     cur.execute(
                         f"""
-                        SELECT DISTINCT {parent_key} AS KEY_VALUE
+                        SELECT DISTINCT TO_VARCHAR({parent_key}) AS KEY_VALUE
                         FROM {parent_full}
                         WHERE {parent_key} IS NOT NULL
                         QUALIFY ROW_NUMBER() OVER (ORDER BY RANDOM()) <= {sample_size}
@@ -984,7 +984,7 @@ def _(BigQueryConnector, get_snowflake_connection, pd):
                     if in_list:
                         try:
                             match_df = connector.query(
-                                f"SELECT COUNT(*) AS match_count FROM {child_full} WHERE {child_key} IN ({in_list})"
+                                f\"SELECT COUNT(*) AS match_count FROM {child_full} WHERE CAST({child_key} AS STRING) IN ({in_list})\"
                             )
                             sf_to_bq_match_count = match_df.iloc[0]["match_count"]
                         except Exception as exc:
@@ -995,7 +995,7 @@ def _(BigQueryConnector, get_snowflake_connection, pd):
                 try:
                     bq_sample_df = connector.query(
                         f"""
-                        SELECT DISTINCT {child_key} AS key_value
+                        SELECT DISTINCT CAST({child_key} AS STRING) AS key_value
                         FROM {child_full}
                         WHERE {child_key} IS NOT NULL
                         ORDER BY RAND()
@@ -1015,7 +1015,7 @@ def _(BigQueryConnector, get_snowflake_connection, pd):
                         try:
                             cur = conn.cursor()
                             cur.execute(
-                                f"SELECT COUNT(*) AS match_count FROM {parent_full} WHERE {parent_key} IN ({in_list})"
+                                f\"SELECT COUNT(*) AS match_count FROM {parent_full} WHERE TO_VARCHAR({parent_key}) IN ({in_list})\"
                             )
                             bq_to_sf_match_count = cur.fetch_pandas_all().iloc[0]["MATCH_COUNT"]
                         except Exception as exc:
