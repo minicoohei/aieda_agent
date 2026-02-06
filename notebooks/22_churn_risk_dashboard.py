@@ -784,6 +784,191 @@ def _(df_other_pages, df_other_pages_by_org, mo):
 @app.cell
 def _(mo):
     mo.md("""
+    ## 5-b. GA推移（全体チャート）
+
+    全組織のGA利用推移（6ヶ月）をPV・UUで可視化します。
+    """)
+    return
+
+
+@app.cell
+def _(GA_DATASET_ID, query_bq):
+    _ga_overall_query = f"""
+    WITH base AS (
+        SELECT
+            FORMAT_DATE('%Y-%m', PARSE_DATE('%Y%m%d', event_date)) AS month,
+            user_pseudo_id,
+            event_name
+        FROM `{GA_DATASET_ID}.events_*`
+        WHERE NOT STARTS_WITH(_TABLE_SUFFIX, 'intraday_')
+          AND _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH))
+    )
+    SELECT
+        month,
+        COUNT(DISTINCT user_pseudo_id) AS uu,
+        COUNTIF(event_name = 'page_view') AS pv
+    FROM base
+    GROUP BY month
+    ORDER BY month
+    """
+    df_ga_overall_trend = query_bq(_ga_overall_query)
+    return (df_ga_overall_trend,)
+
+
+@app.cell
+def _(df_ga_overall_trend, mo):
+    import altair as alt
+
+    _ga_chart_outputs = []
+    if len(df_ga_overall_trend) > 0:
+        _ga_chart_outputs.append(mo.md(f"**全体GA推移**: {len(df_ga_overall_trend)} ヶ月分"))
+
+        _chart_pv = (
+            alt.Chart(df_ga_overall_trend)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("month:N", title="月"),
+                y=alt.Y("pv:Q", title="PV", scale=alt.Scale(zero=False)),
+                tooltip=["month", "pv"],
+            )
+            .properties(title="PV推移（全体）", width=400, height=280)
+        )
+
+        _chart_uu = (
+            alt.Chart(df_ga_overall_trend)
+            .mark_line(point=True, color="orange")
+            .encode(
+                x=alt.X("month:N", title="月"),
+                y=alt.Y("uu:Q", title="UU", scale=alt.Scale(zero=False)),
+                tooltip=["month", "uu"],
+            )
+            .properties(title="UU推移（全体）", width=400, height=280)
+        )
+
+        _ga_chart_outputs.append(_chart_pv | _chart_uu)
+        _ga_chart_outputs.append(mo.ui.table(df_ga_overall_trend, pagination=False))
+    else:
+        _ga_chart_outputs.append(mo.md("*GAデータなし*"))
+
+    mo.vstack(_ga_chart_outputs)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""
+    ## 5-c. リスト追加推移（全体チャート）
+
+    CompanyList・PeopleListの月次追加推移（6ヶ月）をUser数・回数で可視化します。
+    """)
+    return
+
+
+@app.cell
+def _(SF_SCHEMA, query_sf):
+    _cl_trend_query = f"""
+    SELECT
+        DATE_TRUNC('month', cl.CREATEDAT) AS MONTH,
+        COUNT(DISTINCT cl.ID) AS LIST_COUNT,
+        COUNT(DISTINCT cl.USERORGRELATIONID) AS USER_COUNT
+    FROM {SF_SCHEMA}.COMPANYLIST cl
+    WHERE cl.CREATEDAT >= DATEADD('month', -6, CURRENT_DATE())
+    GROUP BY MONTH
+    ORDER BY MONTH
+    """
+    df_companylist_trend_all = query_sf(_cl_trend_query)
+
+    _pl_trend_query = f"""
+    SELECT
+        DATE_TRUNC('month', pl.CREATEDAT) AS MONTH,
+        COUNT(DISTINCT pl.ID) AS LIST_COUNT,
+        COUNT(DISTINCT pl.USERORGRELATIONID) AS USER_COUNT
+    FROM {SF_SCHEMA}.PEOPLELIST pl
+    WHERE pl.CREATEDAT >= DATEADD('month', -6, CURRENT_DATE())
+    GROUP BY MONTH
+    ORDER BY MONTH
+    """
+    df_peoplelist_trend_all = query_sf(_pl_trend_query)
+    return df_companylist_trend_all, df_peoplelist_trend_all
+
+
+@app.cell
+def _(df_companylist_trend_all, df_peoplelist_trend_all, mo):
+    import altair as alt
+
+    _list_chart_outputs = []
+
+    # --- CompanyList ---
+    _list_chart_outputs.append(mo.md("### CompanyList追加推移（全体）"))
+    if len(df_companylist_trend_all) > 0:
+        _df_cl = df_companylist_trend_all.copy()
+        _df_cl.columns = [c.upper() for c in _df_cl.columns]
+        _df_cl["MONTH"] = _df_cl["MONTH"].astype(str).str[:7]
+
+        _chart_cl_count = (
+            alt.Chart(_df_cl)
+            .mark_bar(color="steelblue", opacity=0.7)
+            .encode(
+                x=alt.X("MONTH:N", title="月"),
+                y=alt.Y("LIST_COUNT:Q", title="リスト作成数"),
+                tooltip=["MONTH", "LIST_COUNT", "USER_COUNT"],
+            )
+            .properties(title="CompanyList作成数", width=400, height=280)
+        )
+        _chart_cl_user = (
+            alt.Chart(_df_cl)
+            .mark_line(point=True, color="red")
+            .encode(
+                x=alt.X("MONTH:N", title="月"),
+                y=alt.Y("USER_COUNT:Q", title="ユーザー数", scale=alt.Scale(zero=False)),
+                tooltip=["MONTH", "LIST_COUNT", "USER_COUNT"],
+            )
+            .properties(title="CompanyList作成ユーザー数", width=400, height=280)
+        )
+        _list_chart_outputs.append(_chart_cl_count | _chart_cl_user)
+        _list_chart_outputs.append(mo.ui.table(_df_cl, pagination=False))
+    else:
+        _list_chart_outputs.append(mo.md("*CompanyListデータなし*"))
+
+    # --- PeopleList ---
+    _list_chart_outputs.append(mo.md("### PeopleList追加推移（全体）"))
+    if len(df_peoplelist_trend_all) > 0:
+        _df_pl = df_peoplelist_trend_all.copy()
+        _df_pl.columns = [c.upper() for c in _df_pl.columns]
+        _df_pl["MONTH"] = _df_pl["MONTH"].astype(str).str[:7]
+
+        _chart_pl_count = (
+            alt.Chart(_df_pl)
+            .mark_bar(color="teal", opacity=0.7)
+            .encode(
+                x=alt.X("MONTH:N", title="月"),
+                y=alt.Y("LIST_COUNT:Q", title="リスト作成数"),
+                tooltip=["MONTH", "LIST_COUNT", "USER_COUNT"],
+            )
+            .properties(title="PeopleList作成数", width=400, height=280)
+        )
+        _chart_pl_user = (
+            alt.Chart(_df_pl)
+            .mark_line(point=True, color="purple")
+            .encode(
+                x=alt.X("MONTH:N", title="月"),
+                y=alt.Y("USER_COUNT:Q", title="ユーザー数", scale=alt.Scale(zero=False)),
+                tooltip=["MONTH", "LIST_COUNT", "USER_COUNT"],
+            )
+            .properties(title="PeopleList作成ユーザー数", width=400, height=280)
+        )
+        _list_chart_outputs.append(_chart_pl_count | _chart_pl_user)
+        _list_chart_outputs.append(mo.ui.table(_df_pl, pagination=False))
+    else:
+        _list_chart_outputs.append(mo.md("*PeopleListデータなし*"))
+
+    mo.vstack(_list_chart_outputs)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""
     ## 6. List分析（CompanyList / PeopleList）
     """)
     return
