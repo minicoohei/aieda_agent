@@ -1,6 +1,7 @@
 %% ============================================
 %% InfoBox 統合ER図
 %% Snowflake (ETL_S3_TRANSALES_DB) + BigQuery (production_infobox)
+%% Updated: 2026-02-10
 %% ============================================
 erDiagram
 
@@ -8,13 +9,13 @@ erDiagram
   %% ユーザー・組織系
   %% ============================================
   USERORGANIZATION {
-    string ORGID PK "ユーザー企業ID"
-    string COMPANYID FK "BeegleCompany FK"
+    string ORGID PK
+    string COMPANYID FK
     string NAME
   }
 
   USERORGRELATION {
-    string ID PK "UUID"
+    string ID PK
     string USERID FK
     string ORGANIZATIONID FK
   }
@@ -26,34 +27,31 @@ erDiagram
 
   BEEGLECOMPANY {
     string ID PK
-    string COMPNO "法人番号"
-    string SHOGO "商号"
-    string SHOGOFULL "商号(フル)"
+    string COMPNO "法人番号 → BQ corporate_id"
+    string SHOGO
+    string SHOGOFULL
   }
 
   %% ============================================
   %% 1stパーティ系 (Snowflake)
   %% ============================================
   FIRSTPARTYGROUP {
-    string ID PK "1stパーティタグ埋込サイト"
+    string ID PK
   }
 
   FIRSTPARTYVISITLOGS {
     string ID PK
     string FIRSTPARTYGROUPID FK
-    string VISITORCOMPANYID FK "訪問者BeegleCompany ID"
+    string VISITORCOMPANYID FK
   }
 
   FIRSTPARTYSCOREVISITOR {
     string ID PK
     string FIRSTPARTYGROUPID FK
-    string COMPANYID FK "ユーザー企業ID(ORGID)"
-    string PAGEREFERRERTYPE "流入経路"
+    string COMPANYID FK
+    string PAGEREFERRERTYPE
   }
 
-  %% ============================================
-  %% インテントスコア系 (Snowflake)
-  %% ============================================
   FIRSTPARTYSCORECHANGE {
     string ID PK
     string FIRSTPARTYGROUPID UK
@@ -69,6 +67,9 @@ erDiagram
     number SCORE
   }
 
+  %% ============================================
+  %% インテントスコア系 (Snowflake)
+  %% ============================================
   INTENTSCORECHANGE {
     string ID PK
     string ORIGINALPRODUCTCATEGORYID UK
@@ -94,8 +95,8 @@ erDiagram
   }
 
   _BEEGLECOMPANYTOCOMPANYLIST {
-    string A FK "company_id (BEEGLECOMPANY)"
-    string B FK "list_id (COMPANYLIST)"
+    string A FK
+    string B FK
     timestamp CREATEDAT
   }
 
@@ -107,32 +108,69 @@ erDiagram
 
   KEYMAN {
     string ID PK
-    string NAME
-    string FIRSTNAME
-    string LASTNAME
-    string POSITION
-    string BEEGLECOMPANYID FK
-    string JOBTYPEID FK
-    string POSITIONRANKID FK
-    number ISRETIRED
   }
 
   _KEYMANTOPEOPLELIST {
-    string A FK "keyman_id (KEYMAN)"
-    string B FK "list_id (PEOPLELIST)"
+    string A FK
+    string B FK
     timestamp CREATEDAT
   }
 
+  %% ============================================
+  %% インポート・CSVダウンロード系
+  %% ============================================
   LEADIMPORTEVENT {
     string ID PK
-    string CSVFILENAME
-    string CREATEDBYUSERORGRELATIONID FK "作成者UserOrgRelation"
+    string USERORGRELATIONID FK
     timestamp CREATEDAT
-    number ISDELETEDALLLEADS
+  }
+
+  CSVDOWNLOADLOG {
+    string ID PK
+    string USERORGRELATIONID FK
+    timestamp CREATEDAT
+  }
+
+  _BEEGLECOMPANYTOCSVDOWNLOADLOG {
+    string A FK
+    string B FK
+    timestamp CREATEDAT
+  }
+
+  CSVDOWNLOADQUOTAUPDATELOG {
+    string ID PK
+    string USERORGRELATIONID FK
+    timestamp CREATEDAT
+  }
+
+  %% ============================================
+  %% 活動履歴（MEMO）系
+  %% ============================================
+  MEMO {
+    string ID PK
+    string CONTENT
+    string COMPANYID FK
+    timestamp CREATEDAT
+    timestamp UPDATEDAT
+    string REPRESENTATIVECHANGEDETAILS
+    timestamp ACTIVITYDATE
+    string ANYFLOWJOBID
+    string USERORGRELATIONID FK
+    timestamp NEXTACTIVITYDATE
+    string NEXTCONTENT
+    enum PRIORITY
+    string STATUSSHOID FK
+  }
+
+  MEMOSTATUSSHO {
+    string ID PK
     string NAME
-    string PEOPLELISTID FK "PeopleList FK"
-    date SNAPSHOT_DATE
-    timestamp LOAD_TIMESTAMP
+    string MEMOSTATUSDAIID FK
+  }
+
+  MEMOSTATUSDAI {
+    string ID PK
+    string NAME
   }
 
   %% ============================================
@@ -140,7 +178,7 @@ erDiagram
   %% ============================================
   LEAD {
     string ID PK
-    string COMPNO "法人番号"
+    string COMPNO "法人番号 = BEEGLECOMPANY.COMPNO"
     string FIRSTNAME
     string LASTNAME
     string SHOGO "商号"
@@ -166,7 +204,7 @@ erDiagram
 
   NEGOTIATION {
     string ID PK
-    string ORGANIZATIONID "orgID? 関連先不明"
+    string ORGANIZATIONID FK "USERORGANIZATION.ORGID"
     timestamp CREATEDAT
     timestamp UPDATEDAT
     string COMPANYID FK
@@ -183,57 +221,6 @@ erDiagram
     string B FK "list_id (PEOPLELIST)"
     date SNAPSHOT_DATE
     timestamp LOAD_TIMESTAMP
-  }
-
-  %% ============================================
-  %% CSVダウンロード系
-  %% ============================================
-  CSVDOWNLOADLOG {
-    string ID PK
-    string USERORGRELATIONID FK
-    timestamp CREATEDAT
-  }
-
-  _BEEGLECOMPANYTOCSVDOWNLOADLOG {
-    string A FK "log_id (CSVDOWNLOADLOG)"
-    string B FK "company_id (BEEGLECOMPANY)"
-    timestamp CREATEDAT
-  }
-
-  CSVDOWNLOADQUOTAUPDATELOG {
-    string ID PK
-    string USERORGRELATIONID FK
-    timestamp CREATEDAT
-  }
-
-  %% ============================================
-  %% 活動履歴（MEMO）系
-  %% ============================================
-  MEMO {
-    string ID PK
-    string CONTENT
-    string COMPANYID FK
-    timestamp CREATEDAT
-    timestamp UPDATEDAT
-    string REPRESENTATIVECHANGEDETAILS
-    timestamp ACTIVITYDATE
-    string ANYFLOWJOBID
-    string USERORGRELATIONID FK
-    timestamp NEXTACTIVITYDATE
-    string NEXTCONTENT
-    enum PRIORITY "A/B/C/NULL"
-    string STATUSSHOID FK
-  }
-
-  MEMOSTATUSSHO {
-    string ID PK
-    string NAME "活動状況(詳細)"
-    string MEMOSTATUSDAIID FK
-  }
-
-  MEMOSTATUSDAI {
-    string ID PK
-    string NAME "活動状況(大分類)"
   }
 
   %% ============================================
@@ -351,22 +338,9 @@ erDiagram
   KEYMAN ||--o{ _KEYMANTOPEOPLELIST : "A"
   PEOPLELIST ||--o{ _KEYMANTOPEOPLELIST : "B"
 
-  BEEGLECOMPANY ||--o{ KEYMAN : "BEEGLECOMPANYID"
+  %% リレーション: インポート・CSVダウンロード
+  USERORGRELATION ||--o{ LEADIMPORTEVENT : "USERORGRELATIONID"
 
-  %% リレーション: LEADIMPORTEVENT
-  USERORGRELATION ||--o{ LEADIMPORTEVENT : "CREATEDBYUSERORGRELATIONID"
-  PEOPLELIST ||--o{ LEADIMPORTEVENT : "PEOPLELISTID"
-
-  %% リレーション: CRM (LEAD / NEGOTIATION)
-  BEEGLECOMPANY ||--o{ LEAD : "COMPANYID"
-  LEADIMPORTEVENT ||--o{ LEAD : "CREATEDBYLEADIMPORTEVENTID"
-  LEADIMPORTEVENT ||--o{ LEAD : "UPDATEDBYLEADIMPORTEVENTID"
-  LEAD ||--o{ _LEADTOPEOPLELIST : "A"
-  PEOPLELIST ||--o{ _LEADTOPEOPLELIST : "B"
-  BEEGLECOMPANY ||--o{ NEGOTIATION : "COMPANYID"
-  %% NEGOTIATION.ORGANIZATIONID の関連先は不明
-
-  %% リレーション: CSVダウンロード
   USERORGRELATION ||--o{ CSVDOWNLOADLOG : "USERORGRELATIONID"
   CSVDOWNLOADLOG ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : "A"
   BEEGLECOMPANY ||--o{ _BEEGLECOMPANYTOCSVDOWNLOADLOG : "B"
@@ -377,6 +351,15 @@ erDiagram
   BEEGLECOMPANY ||--o{ MEMO : "COMPANYID"
   MEMOSTATUSSHO ||--o{ MEMO : "STATUSSHOID"
   MEMOSTATUSDAI ||--o{ MEMOSTATUSSHO : "MEMOSTATUSDAIID"
+
+  %% リレーション: CRM (LEAD / NEGOTIATION)
+  BEEGLECOMPANY ||--o{ LEAD : "COMPANYID"
+  LEADIMPORTEVENT ||--o{ LEAD : "CREATEDBYLEADIMPORTEVENTID"
+  LEADIMPORTEVENT ||--o{ LEAD : "UPDATEDBYLEADIMPORTEVENTID"
+  LEAD ||--o{ _LEADTOPEOPLELIST : "A"
+  PEOPLELIST ||--o{ _LEADTOPEOPLELIST : "B"
+  BEEGLECOMPANY ||--o{ NEGOTIATION : "COMPANYID"
+  USERORGANIZATION ||--o{ NEGOTIATION : "ORGANIZATIONID"
 
   %% リレーション: 論理マート
   USERORGANIZATION ||--o{ GA_SF_INTENT_MART : "ORGID"
@@ -390,3 +373,11 @@ erDiagram
   %% リレーション: BigQuery 2ndパーティ
   BQ_master_original_product_category ||--o{ BQ_score_company_category_change_v3_all_history : "original_category_id"
   BQ_master_original_product_category ||--o{ BQ_company_category_daily_v3 : "original_category_id"
+
+  %% ============================================
+  %% COMPNO (法人番号) 紐づけ
+  %% ============================================
+  %% BEEGLECOMPANY.COMPNO は以下と結合可能:
+  %%   - LEAD.COMPNO (Snowflake CRM)
+  %%   - BQ corporate_id (BigQuery 全テーブル)
+  %%   - infobox_data.tsv COMPNO カラム

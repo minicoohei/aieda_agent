@@ -227,6 +227,6 @@
 
 ### 未解決事項
 
-- **NEGOTIATION.ORGANIZATIONID**: 関連先テーブルが不明。USERORGANIZATION.ORGID の可能性があるが未確認
+- ~~**NEGOTIATION.ORGANIZATIONID**: 関連先テーブルが不明~~ → **解消**: USERORGANIZATION.ORGID で確定（2026-02 開発チーム回答）
 - **利益率・売上成長率の数値データ**: PlanetScaleにはタグ化されたカテゴリのみ。数値が必要な場合はDKS/Snowflakeの cleansed_* テーブルから取得が必要
 - **Departmentのdbtモデル**: source定義のみでCLEANSED以降は未実装。マートに含める場合はDepartmentテーブルから直接集計
