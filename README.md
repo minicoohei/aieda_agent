@@ -274,16 +274,54 @@ Phase 1: データ収集 → Phase 2 & 3: 統計/テキスト分析（並列）�
 
 各Phaseは独立したMarimoノートブックとして実装され、依存関係に基づいて自動的に実行順序が管理されます。
 
+## AIモデル設定
+
+AIEDA Agentは、タスクタイプに応じて最適なAIモデルを選択します。
+
+### モデル階層
+
+1. **Primary Model**: Claude Opus 4.6 Max
+   - 全てのタスクのデフォルトモデル
+   - 最高の推論能力とコンテキスト理解
+
+2. **実装タスク用フォールバックチェーン**:
+   - **Claude Code (YOLO mode)**: 実装タスクの第一選択
+   - **Kimi Code**: Claude Code が利用不可の場合
+   - **Kimi 2.5 Thinking**: コード特化ツールが失敗した場合
+   - **Claude Sonnet 4.5**: 最終フォールバック
+
+### 設定ファイル
+
+- `aieda_model_config.yaml`: モデル設定の定義
+- `aieda_deployment_template.yaml`: AWS CloudFormationテンプレート
+- `scripts/aieda_model_manager.py`: モデル選択ロジックの実装
+
+### 使用方法
+
+```python
+from scripts.aieda_model_manager import AIEDAModelManager, TaskType
+
+manager = AIEDAModelManager()
+
+# 実装タスク用のモデル取得
+model = manager.select_model("implementation")
+print(f"Selected: {model.model_id}")  # claude-code
+
+# フォールバックチェーンの取得
+fallbacks = manager.get_fallback_chain("claude-code", "implementation")
+```
+
 ## 今後のロードマップ
 
 1. ✅ 包括的分析フレームワークの実装（並列実行・自動ポート割り当て）
-2. `config.py`（Pydantic Settings）実装とテスト
-3. DuckDB / Filesystem コネクタ実装
-4. Marimo ポータル（ソース選択 + プレビュー + 保存）
-5. EDAタブ（YData Profiling / AutoViz）の統合 - Marimoで実装
-6. S3 / Sheets / BigQuery コネクタ
-7. CI（unitテスト）と integration / eda トリガ
-8. リアルタイム分析ダッシュボード
+2. ✅ AIモデル選択・フォールバック機能の実装
+3. `config.py`（Pydantic Settings）実装とテスト
+4. DuckDB / Filesystem コネクタ実装
+5. Marimo ポータル（ソース選択 + プレビュー + 保存）
+6. EDAタブ（YData Profiling / AutoViz）の統合 - Marimoで実装
+7. S3 / Sheets / BigQuery コネクタ
+8. CI（unitテスト）と integration / eda トリガ
+9. リアルタイム分析ダッシュボード
 
 ご意見・要望があれば Issue / PR / DM でお知らせください。
 

@@ -1,0 +1,71 @@
+# AIEDA Agent Model Configuration
+# Updated: 2026-02-11
+
+# Primary model for all tasks
+primary_model:
+  provider: "Anthropic"
+  model_id: "claude-opus-4-6"
+  subscription: "Claude Opus 4.6 Max"
+  description: "Primary model for all AIEDA agent tasks"
+
+# Implementation task models with fallback chain
+implementation_models:
+  primary:
+    provider: "Claude Code"
+    launch_mode: "YOLO"  # Launch without confirmation prompts
+    model_id: "claude-code"
+    description: "Primary implementation tool - Claude Code with YOLO mode"
+
+  fallback_chain:
+    - provider: "Kimi Code"
+      model_id: "kimi-code"
+      description: "First fallback for implementation tasks"
+
+    - provider: "Kimi"
+      model_id: "kimi-2.5-thinking"
+      description: "Second fallback - Kimi 2.5 Thinking model"
+
+    - provider: "Anthropic"
+      model_id: "claude-3-5-sonnet-20241022"
+      description: "Final fallback - Claude Sonnet 4.5"
+
+# General AI model fallback configuration
+general_models:
+  primary:
+    provider: "Anthropic"
+    model_id: "claude-opus-4-6"
+    max_tokens: 4096
+
+  fallback_chain:
+    - provider: "Kimi"
+      model_id: "kimi-2.5-thinking"
+      max_tokens: 32768
+
+    - provider: "Anthropic"
+      model_id: "claude-3-5-sonnet-20241022"
+      max_tokens: 4096
+
+# Bedrock configuration (if needed)
+bedrock_config:
+  enabled: false  # Bedrock discovery not required per user feedback
+  region: "us-west-2"
+  note: "Bedrock discovery disabled as per user preference"
+
+# Model selection strategy
+selection_strategy:
+  implementation_tasks:
+    - "Always start with Claude Code in YOLO mode"
+    - "If Claude Code unavailable, use Kimi Code"
+    - "If code-specific tools fail, fall back to Kimi 2.5 Thinking"
+    - "Final fallback to Claude Sonnet 4.5"
+
+  general_tasks:
+    - "Use Claude Opus 4.6 Max as primary"
+    - "Fall back through chain if primary unavailable"
+
+# Usage notes
+usage_notes:
+  - "Implementation tasks should prefer specialized code tools"
+  - "YOLO mode means launching without user confirmation prompts"
+  - "Fallback chain ensures task completion even if primary tools fail"
+  - "Bedrock discovery is not required based on current architecture"

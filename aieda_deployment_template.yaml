@@ -1,0 +1,190 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AIEDA Agent Deployment with Claude Opus 4.6 Max Primary and Fallback Chain'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: production
+    AllowedValues:
+      - development
+      - staging
+      - production
+    Description: Deployment environment
+
+Resources:
+  # Model Configuration Storage
+  AIEDAModelConfig:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub '/aieda/${Environment}/model-config'
+      Type: String
+      Description: AIEDA Model Configuration
+      Value: !Sub |
+        {
+          "primaryModel": {
+            "provider": "Anthropic",
+            "modelId": "claude-opus-4-6",
+            "subscription": "Claude Opus 4.6 Max",
+            "maxTokens": 4096,
+            "temperature": 0.7
+          },
+          "implementationModels": {
+            "primary": {
+              "provider": "Claude Code",
+              "launchMode": "YOLO",
+              "modelId": "claude-code",
+              "description": "Primary implementation tool"
+            },
+            "fallbackChain": [
+              {
+                "provider": "Kimi Code",
+                "modelId": "kimi-code",
+                "priority": 1
+              },
+              {
+                "provider": "Kimi",
+                "modelId": "kimi-2.5-thinking",
+                "priority": 2
+              },
+              {
+                "provider": "Anthropic",
+                "modelId": "claude-3-5-sonnet-20241022",
+                "priority": 3
+              }
+            ]
+          }
+        }
+
+  # Lambda Function for Model Selection
+  ModelSelectionFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub 'aieda-model-selector-${Environment}'
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt ModelSelectionRole.Arn
+      Environment:
+        Variables:
+          CONFIG_PARAMETER: !Ref AIEDAModelConfig
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+
+          ssm = boto3.client('ssm')
+
+          def handler(event, context):
+              # Get model configuration
+              config_param = os.environ['CONFIG_PARAMETER']
+              response = ssm.get_parameter(Name=config_param)
+              config = json.loads(response['Parameter']['Value'])
+
+              task_type = event.get('taskType', 'general')
+
+              if task_type == 'implementation':
+                  # Try primary implementation tool first
+                  models = [config['implementationModels']['primary']]
+                  models.extend(config['implementationModels']['fallbackChain'])
+              else:
+                  # Use general model
+                  models = [config['primaryModel']]
+
+              return {
+                  'statusCode': 200,
+                  'body': json.dumps({
+                      'taskType': task_type,
+                      'models': models,
+                      'primaryModel': models[0] if models else None
+                  })
+              }
+
+  # IAM Role for Lambda
+  ModelSelectionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: SSMReadPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aieda/*'
+
+  # API Gateway for Model Selection
+  ModelSelectionAPI:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Sub 'aieda-model-api-${Environment}'
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowMethods:
+          - GET
+          - POST
+        AllowHeaders:
+          - '*'
+
+  # Lambda Integration
+  ModelSelectionIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ModelSelectionAPI
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub
+        - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionArn}/invocations'
+        - FunctionArn: !GetAtt ModelSelectionFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  # API Route
+  ModelSelectionRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ModelSelectionAPI
+      RouteKey: 'POST /select-model'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ModelSelectionIntegration
+
+  # API Stage
+  ModelSelectionStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref ModelSelectionAPI
+      StageName: !Ref Environment
+      AutoDeploy: true
+
+  # Lambda Permission for API Gateway
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ModelSelectionFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ModelSelectionAPI}/*/*'
+
+Outputs:
+  APIEndpoint:
+    Description: API Gateway endpoint for model selection
+    Value: !Sub 'https://${ModelSelectionAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}'
+    Export:
+      Name: !Sub '${AWS::StackName}-APIEndpoint'
+
+  ModelConfigParameter:
+    Description: SSM Parameter storing model configuration
+    Value: !Ref AIEDAModelConfig
+    Export:
+      Name: !Sub '${AWS::StackName}-ModelConfig'
